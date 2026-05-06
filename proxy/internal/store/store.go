@@ -40,6 +40,7 @@ type Session struct {
 type Account struct {
 	ID           string `json:"id"`
 	Email        string `json:"email"`
+	Password     string `json:"password,omitempty"`
 	EnterpriseID string `json:"enterprise_id"`
 	Status       string `json:"status"`
 	LastLoginAt  string `json:"last_login_at"`
@@ -287,4 +288,79 @@ func (s *Store) GetRecentLogs(n int) []LogEntry {
 	result := make([]LogEntry, len(logs))
 	copy(result, logs)
 	return result
+}
+
+func (s *Store) GetAllAccounts() []Account {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	result := make([]Account, len(s.data.Accounts))
+	copy(result, s.data.Accounts)
+	return result
+}
+
+func (s *Store) AddAccounts(accounts []Account) (added int, skipped int) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	existing := make(map[string]bool)
+	for _, a := range s.data.Accounts {
+		existing[a.Email] = true
+	}
+	for _, a := range accounts {
+		if existing[a.Email] {
+			skipped++
+			continue
+		}
+		a.Status = "pending"
+		a.CreatedAt = now()
+		if a.ID == "" {
+			a.ID = fmt.Sprintf("acc_%d", len(s.data.Accounts)+added+1)
+		}
+		s.data.Accounts = append(s.data.Accounts, a)
+		existing[a.Email] = true
+		added++
+	}
+	s.save()
+	return
+}
+
+func (s *Store) GetPendingAccounts() []Account {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	activeEmails := make(map[string]bool)
+	for _, sess := range s.data.Sessions {
+		if sess.Status == "active" {
+			activeEmails[sess.Email] = true
+		}
+	}
+	var pending []Account
+	for _, a := range s.data.Accounts {
+		if !activeEmails[a.Email] && a.Password != "" {
+			pending = append(pending, a)
+		}
+	}
+	return pending
+}
+
+func (s *Store) RemoveSession(id int) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for i, sess := range s.data.Sessions {
+		if sess.ID == id {
+			s.data.Sessions = append(s.data.Sessions[:i], s.data.Sessions[i+1:]...)
+			return s.save()
+		}
+	}
+	return fmt.Errorf("session %d not found", id)
+}
+
+func (s *Store) RemoveAccount(id string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for i, a := range s.data.Accounts {
+		if a.ID == id {
+			s.data.Accounts = append(s.data.Accounts[:i], s.data.Accounts[i+1:]...)
+			return s.save()
+		}
+	}
+	return fmt.Errorf("account %s not found", id)
 }

@@ -72,6 +72,10 @@ func main() {
 	mux.Handle("/v1/models", handler.NewModelsHandler(cfg.ModelMap))
 	mux.Handle("/health", handler.NewHealthHandler(pool))
 	mux.Handle("/api/dashboard", handler.NewDashboardHandler(pool, db, startTime))
+	mux.Handle("/api/sessions", handler.NewSessionsHandler(db))
+	mux.Handle("/api/sessions/", handler.NewSessionsHandler(db))
+	mux.Handle("/api/sessions/login", handler.NewLoginHandler(db))
+	mux.Handle("/api/sessions/login-status", handler.NewLoginStatusHandler(db))
 
 	// Serve dashboard static files from ../dashboard/dist/
 	// Resolve relative to the executable location
