@@ -15,7 +15,7 @@ const navSections: NavSection[] = [
   {
     title: 'ACCOUNTS',
     items: [
-      { label: 'Accounts', icon: '👤', page: 'sessions' },
+      { label: 'Accounts', icon: '👤', page: 'accounts' },
       { label: 'Models', icon: '🧠' },
     ],
   },
@@ -30,6 +30,7 @@ const navSections: NavSection[] = [
   {
     title: 'LOGS & ANALYTICS',
     items: [
+      { label: 'Login', icon: '🔐', page: 'login' },
       { label: 'Requests', icon: '📋' },
       { label: 'Usage', icon: '📊' },
     ],

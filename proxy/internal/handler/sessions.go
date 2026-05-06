@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -11,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/hanni/aiproxy/proxy/internal/store"
 )
@@ -130,11 +132,18 @@ func (h *SessionsHandler) handleDelete(w http.ResponseWriter, _ *http.Request, i
 
 // --- Login Handler (POST /api/sessions/login) ---
 
+type loginLogEntry struct {
+	Time    string `json:"time"`
+	Message string `json:"message"`
+	Level   string `json:"level"`
+}
+
 var (
 	loginMu      sync.Mutex
 	loginRunning bool
 	loginTotal   int
 	loginCmd     *exec.Cmd
+	loginLogs    []loginLogEntry
 )
 
 type LoginHandler struct {
@@ -200,10 +209,11 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	loginTotal = len(pending)
 	loginRunning = true
+	loginLogs = nil // reset logs
 	loginCmd = exec.Command("python", "-u", scriptPath, tmpFile.Name(), "--headless")
 	loginMu.Unlock()
 
-	// Run in background
+	// Run in background with line-by-line capture
 	go func() {
 		defer func() {
 			loginMu.Lock()
@@ -213,11 +223,48 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			os.Remove(tmpFile.Name())
 		}()
 
-		output, err := loginCmd.CombinedOutput()
+		stdout, err := loginCmd.StdoutPipe()
 		if err != nil {
-			slog.Error("batch login failed", "error", err, "output", string(output))
+			slog.Error("failed to get stdout pipe", "error", err)
+			return
+		}
+		loginCmd.Stderr = loginCmd.Stdout // merge stderr into stdout
+
+		if err := loginCmd.Start(); err != nil {
+			slog.Error("batch login start failed", "error", err)
+			return
+		}
+
+		scanner := bufio.NewScanner(stdout)
+		for scanner.Scan() {
+			line := scanner.Text()
+			now := time.Now().Format("15:04:05")
+			level := "info"
+			if strings.Contains(strings.ToLower(line), "error") || strings.Contains(strings.ToLower(line), "fail") {
+				level = "error"
+			} else if strings.Contains(strings.ToLower(line), "success") || strings.Contains(strings.ToLower(line), "authenticated") || strings.Contains(line, "✓") {
+				level = "success"
+			}
+
+			loginMu.Lock()
+			loginLogs = append(loginLogs, loginLogEntry{
+				Time:    now,
+				Message: line,
+				Level:   level,
+			})
+			// Keep last 200 lines
+			if len(loginLogs) > 200 {
+				loginLogs = loginLogs[len(loginLogs)-200:]
+			}
+			loginMu.Unlock()
+
+			slog.Debug("login output", "line", line)
+		}
+
+		if err := loginCmd.Wait(); err != nil {
+			slog.Error("batch login failed", "error", err)
 		} else {
-			slog.Info("batch login completed", "output", string(output))
+			slog.Info("batch login completed")
 		}
 	}()
 
@@ -270,4 +317,36 @@ func (h *LoginStatusHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		"completed": completed,
 		"total":     total,
 	})
+}
+
+// --- Login Logs Handler (GET /api/sessions/login-logs) ---
+
+type LoginLogsHandler struct{}
+
+func NewLoginLogsHandler() *LoginLogsHandler {
+	return &LoginLogsHandler{}
+}
+
+func (h *LoginLogsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, `{"error":"method not allowed"}`, http.StatusMethodNotAllowed)
+		return
+	}
+
+	loginMu.Lock()
+	logs := make([]loginLogEntry, len(loginLogs))
+	copy(logs, loginLogs)
+	loginMu.Unlock()
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]any{"logs": logs})
 }
