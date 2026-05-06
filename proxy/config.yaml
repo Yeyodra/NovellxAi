@@ -16,12 +16,24 @@ keypool:
 database:
   path: "./data/proxy.db"
 
+# Model mapping: incoming model name → CodeBuddy model name
+# API key auth confirmed working models:
+#   default-model → codewise-default-cw-api-4
+#   default-model-lite → codewise-default-cw-api-3
+#   gpt-5.5 → gpt-5.5
+#   gemini-3.1-pro → gemini-3.1-pro-preview
+#   gemini-3.0-flash → gemini-3-flash-preview
+# NOTE: Claude models NOT available via API key (only via JWT)
 model_map:
-  "claude-opus-4-6": "claude-opus-4.6"
-  "claude-opus-4.6": "claude-opus-4.6"
   "gpt-5.5": "gpt-5.5"
+  "gpt-4o": "default-model"
+  "gpt-4": "default-model"
+  "default": "default-model"
+  "default-model": "default-model"
   "default-model-lite": "default-model-lite"
-  "codewise-default-cw-api-3": "codewise-default-cw-api-3"
+  "gemini-3.1-pro": "gemini-3.1-pro"
+  "gemini-3.0-flash": "gemini-3.0-flash"
+  "gemini-flash": "gemini-3.0-flash"
 
 logging:
   level: "info"

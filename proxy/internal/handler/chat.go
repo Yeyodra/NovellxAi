@@ -28,9 +28,29 @@ func NewChatHandler(pool *keypool.Pool, client *upstream.Client, s *store.Store,
 }
 
 type chatRequest struct {
-	Model    string          `json:"model"`
-	Messages json.RawMessage `json:"messages"`
-	Stream   bool            `json:"stream"`
+	Model         string          `json:"model"`
+	Messages      json.RawMessage `json:"messages"`
+	Stream        bool            `json:"stream"`
+	StreamOptions json.RawMessage `json:"stream_options,omitempty"`
+}
+
+// ensureStream forces stream:true and adds stream_options if missing.
+// CodeBuddy API key auth ONLY supports streaming mode.
+func ensureStream(body []byte) []byte {
+	var raw map[string]json.RawMessage
+	if err := json.Unmarshal(body, &raw); err != nil {
+		return body
+	}
+	raw["stream"] = json.RawMessage(`true`)
+	if _, ok := raw["stream_options"]; !ok {
+		raw["stream_options"] = json.RawMessage(`{"include_usage":true}`)
+	}
+	// Also ensure system message exists (required by CodeBuddy)
+	out, err := json.Marshal(raw)
+	if err != nil {
+		return body
+	}
+	return out
 }
 
 func (h *ChatHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -57,6 +77,9 @@ func (h *ChatHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		slog.Debug("model mapped", "from", req.Model, "to", mapped)
 	}
 
+	// Force stream mode — CodeBuddy API key auth only supports streaming
+	body = ensureStream(body)
+
 	// Track which sessions we've already tried to avoid retrying the same one
 	tried := make(map[int]bool)
 
@@ -81,10 +104,10 @@ func (h *ChatHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// Mark this session as tried
 		tried[sess.ID] = true
 
-		slog.Info("proxy request", "model", req.Model, "account", sess.Email, "session_id", sess.ID)
+		slog.Info("proxy request", "model", req.Model, "account", sess.Email, "session_id", sess.ID, "auth_mode", authMode(sess))
 
 		start := time.Now()
-		resp, err := h.client.ChatCompletion(r.Context(), sess.JWTToken, sess.UserID, body)
+		resp, err := h.client.ChatCompletion(r.Context(), sess.ApiKey, sess.JWTToken, sess.UserID, body)
 		latency := time.Since(start)
 
 		if err != nil {
@@ -132,11 +155,8 @@ func (h *ChatHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		_ = h.store.LogRequest(sess.ID, req.Model, resp.StatusCode, latency.Milliseconds(), "")
 		h.pool.Release(sess, resp.StatusCode, "")
 
-		if req.Stream {
-			h.relayStream(w, resp)
-		} else {
-			h.relayJSON(w, resp)
-		}
+		// Always stream — CodeBuddy API key mode only supports streaming
+		h.relayStream(w, resp)
 		return
 	}
 
@@ -165,6 +185,13 @@ func (h *ChatHandler) relayJSON(w http.ResponseWriter, resp *http.Response) {
 
 func replaceModelInBody(body []byte, from, to string) []byte {
 	return []byte(strings.Replace(string(body), `"`+from+`"`, `"`+to+`"`, 1))
+}
+
+func authMode(sess *store.Session) string {
+	if sess.ApiKey != "" {
+		return "apikey"
+	}
+	return "jwt"
 }
 
 func min(a, b int) int {

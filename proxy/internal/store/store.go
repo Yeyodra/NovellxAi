@@ -22,18 +22,19 @@ type Data struct {
 }
 
 type Session struct {
-	ID            int    `json:"id"`
-	Email         string `json:"email"`
-	AccountID     string `json:"account_id"`
-	JWTToken      string `json:"jwt_token"`      // Bearer token (JWT from Keycloak)
-	UserID        string `json:"user_id"`        // X-User-Id header
-	RefreshToken  string `json:"refresh_token"`  // For token refresh
-	Status        string `json:"status"`         // active|exhausted|expired|banned
-	IsCurrent     bool   `json:"is_current"`
-	RemainingQuota int   `json:"remaining_quota"`
-	LastUsedAt    string `json:"last_used_at"`
-	ExpiresAt     string `json:"expires_at"`
-	CreatedAt     string `json:"created_at"`
+	ID             int    `json:"id"`
+	Email          string `json:"email"`
+	AccountID      string `json:"account_id"`
+	JWTToken       string `json:"jwt_token"`       // Bearer token (JWT from Keycloak)
+	ApiKey         string `json:"api_key"`          // CodeBuddy API key (ck_...) — preferred auth
+	UserID         string `json:"user_id"`          // X-User-Id header
+	RefreshToken   string `json:"refresh_token"`    // For token refresh
+	Status         string `json:"status"`           // active|exhausted|expired|banned
+	IsCurrent      bool   `json:"is_current"`
+	RemainingQuota int    `json:"remaining_quota"`
+	LastUsedAt     string `json:"last_used_at"`
+	ExpiresAt      string `json:"expires_at"`
+	CreatedAt      string `json:"created_at"`
 }
 
 type Account struct {

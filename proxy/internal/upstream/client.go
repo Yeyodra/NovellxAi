@@ -33,11 +33,35 @@ func NewClient(baseURL, chatPath string, timeout time.Duration) *Client {
 	}
 }
 
-// ChatCompletion sends gzip-compressed request to CodeBuddy with all required headers
-func (c *Client) ChatCompletion(ctx context.Context, jwtToken, userID string, body []byte) (*http.Response, error) {
+// ChatCompletionAPIKey sends request to CodeBuddy using API key auth (X-API-Key header).
+// This is the preferred auth method — no gzip needed, simpler headers.
+func (c *Client) ChatCompletionAPIKey(ctx context.Context, apiKey string, body []byte) (*http.Response, error) {
 	url := c.baseURL + c.chatPath
 
-	// Gzip compress the body — CodeBuddy requires Content-Encoding: gzip
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(body))
+	if err != nil {
+		return nil, fmt.Errorf("create request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-API-Key", apiKey)
+	req.Header.Set("X-IDE-Name", "CLI")
+	req.Header.Set("X-IDE-Type", "CLI")
+	req.Header.Set("X-Product", "SaaS")
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("do request: %w", err)
+	}
+	return resp, nil
+}
+
+// ChatCompletionJWT sends gzip-compressed request to CodeBuddy with JWT Bearer auth.
+// Fallback for sessions that only have JWT (no API key).
+func (c *Client) ChatCompletionJWT(ctx context.Context, jwtToken, userID string, body []byte) (*http.Response, error) {
+	url := c.baseURL + c.chatPath
+
+	// Gzip compress the body
 	var compressed bytes.Buffer
 	gz := gzip.NewWriter(&compressed)
 	if _, err := gz.Write(body); err != nil {
@@ -52,17 +76,17 @@ func (c *Client) ChatCompletion(ctx context.Context, jwtToken, userID string, bo
 		return nil, fmt.Errorf("create request: %w", err)
 	}
 
-	// Generate unique IDs for this request
 	convID := genUUID()
 	msgID := genHex(16)
 	reqID := genHex(16)
 
-	// Required headers (from HAR capture — all needed for 200)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Encoding", "gzip")
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", jwtToken)
-	req.Header.Set("X-User-Id", userID)
+	if userID != "" {
+		req.Header.Set("X-User-Id", userID)
+	}
 	req.Header.Set("X-Domain", "www.codebuddy.ai")
 	req.Header.Set("X-Product", "SaaS")
 	req.Header.Set("X-IDE-Type", "CLI")
@@ -84,6 +108,14 @@ func (c *Client) ChatCompletion(ctx context.Context, jwtToken, userID string, bo
 		return nil, fmt.Errorf("do request: %w", err)
 	}
 	return resp, nil
+}
+
+// ChatCompletion dispatches to API key or JWT auth based on session credentials.
+func (c *Client) ChatCompletion(ctx context.Context, apiKey, jwtToken, userID string, body []byte) (*http.Response, error) {
+	if apiKey != "" {
+		return c.ChatCompletionAPIKey(ctx, apiKey, body)
+	}
+	return c.ChatCompletionJWT(ctx, jwtToken, userID, body)
 }
 
 func RelaySSE(w http.ResponseWriter, upstream io.Reader) error {
