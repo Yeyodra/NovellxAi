@@ -1,0 +1,8 @@
+proxy/data/
+proxy/aiproxy.exe
+proxy/proxy.exe
+*.exe
+auth-engine/.venv/
+auth-engine/__pycache__/
+*.pyc
+.env

@@ -1,0 +1,26 @@
+server:
+  addr: ":8090"
+  auth_token: "changeme-your-personal-token"
+
+upstream:
+  base_url: "https://www.codebuddy.ai"
+  chat_path: "/v2/chat/completions"
+  timeout: 120s
+  max_retries: 3
+
+keypool:
+  cooldown_duration: 60s
+  min_active_keys: 5
+
+database:
+  path: "./data/proxy.db"
+
+model_map:
+  "claude-opus-4-6": "claude-opus-4.6"
+  "claude-opus-4.6": "claude-opus-4.6"
+  "gpt-5.5": "gpt-5.5"
+  "default-model-lite": "default-model-lite"
+  "codewise-default-cw-api-3": "codewise-default-cw-api-3"
+
+logging:
+  level: "info"

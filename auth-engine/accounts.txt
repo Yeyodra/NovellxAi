@@ -1,0 +1,6 @@
+# Add your Google accounts here, one per line
+# Format: email:password
+#
+# Example:
+# myemail@gmail.com:mypassword123
+# another@gmail.com:pass456
