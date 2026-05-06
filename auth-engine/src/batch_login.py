@@ -59,11 +59,12 @@ async def login_single(adapter: CodeBuddyProviderAdapter, email: str, password: 
         if api_key:
             store.add_session(
                 email=email,
-                jwt_token=f"Bearer {api_key}" if not api_key.startswith("Bearer ") else api_key,
-                user_id=tokens.get("state", ""),
+                jwt_token="",
+                user_id="",
                 refresh_token="",
+                api_key=api_key,
             )
-            log.info(f"[{email}] Added to store successfully")
+            log.info(f"[{email}] API key stored (ck_...{api_key[-8:]})")
             return True
         else:
             log.error(f"[{email}] No API key in tokens: {tokens}")

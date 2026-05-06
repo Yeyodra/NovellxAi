@@ -31,26 +31,32 @@ class Store:
         ids = [s["id"] for s in self.data["sessions"]]
         return max(ids, default=0) + 1
 
-    def add_session(self, email: str, jwt_token: str, user_id: str, refresh_token: str = ""):
+    def add_session(self, email: str, jwt_token: str, user_id: str, refresh_token: str = "", api_key: str = ""):
         """Add or update a session. If email exists, update token."""
         # Ensure jwt_token has Bearer prefix
-        if not jwt_token.startswith("Bearer "):
+        if jwt_token and not jwt_token.startswith("Bearer "):
             jwt_token = f"Bearer {jwt_token}"
 
         # Auto-detect user_id from JWT if not provided
-        if not user_id:
+        if not user_id and jwt_token:
             user_id = self._extract_sub_from_jwt(jwt_token)
 
         # Auto-detect expiry from JWT
-        expires_at = self._extract_exp_from_jwt(jwt_token)
+        expires_at = self._extract_exp_from_jwt(jwt_token) if jwt_token else ""
 
         for i, s in enumerate(self.data["sessions"]):
             if s["email"] == email:
-                self.data["sessions"][i]["jwt_token"] = jwt_token
-                self.data["sessions"][i]["user_id"] = user_id
-                self.data["sessions"][i]["refresh_token"] = refresh_token
+                if jwt_token:
+                    self.data["sessions"][i]["jwt_token"] = jwt_token
+                if user_id:
+                    self.data["sessions"][i]["user_id"] = user_id
+                if refresh_token:
+                    self.data["sessions"][i]["refresh_token"] = refresh_token
+                if api_key:
+                    self.data["sessions"][i]["api_key"] = api_key
                 self.data["sessions"][i]["status"] = "active"
-                self.data["sessions"][i]["expires_at"] = expires_at
+                if expires_at:
+                    self.data["sessions"][i]["expires_at"] = expires_at
                 self._save()
                 return self.data["sessions"][i]["id"]
 
@@ -59,6 +65,7 @@ class Store:
             "email": email,
             "account_id": email,
             "jwt_token": jwt_token,
+            "api_key": api_key,
             "user_id": user_id,
             "refresh_token": refresh_token,
             "status": "active",

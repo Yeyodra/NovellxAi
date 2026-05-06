@@ -13,27 +13,33 @@ log = logging.getLogger(__name__)
 
 
 def cmd_add(args):
-    """Add a session from JWT token."""
+    """Add a session from API key or JWT token."""
     store = Store(STORE_PATH)
 
     if len(args) < 2:
-        print("Usage: python -m src.main add <email> <jwt_token> [refresh_token]")
+        print("Usage: python -m src.main add <email> <api_key_or_jwt> [refresh_token]")
         print("")
-        print("  jwt_token: The full Bearer token (with or without 'Bearer ' prefix)")
-        print("  refresh_token: Optional, for automatic token refresh")
+        print("  api_key: CodeBuddy API key (ck_...) — preferred")
+        print("  jwt_token: Bearer token (fallback)")
         print("")
-        print("How to get JWT token:")
-        print("  1. Open HTTP Toolkit or browser DevTools")
-        print("  2. Use CodeBuddy CLI or extension")
-        print("  3. Find request to /v2/chat/completions")
-        print("  4. Copy the Authorization header value")
+        print("How to get API key:")
+        print("  1. Go to https://www.codebuddy.ai/profile/keys")
+        print("  2. Create new API key")
+        print("  3. Copy the ck_... value")
+        print("")
+        print("Or use batch-login to auto-generate keys for multiple accounts")
         sys.exit(1)
 
     email = args[0]
-    jwt_token = args[1]
+    credential = args[1]
     refresh_tok = args[2] if len(args) > 2 else ""
 
-    session_id = store.add_session(email, jwt_token, user_id="", refresh_token=refresh_tok)
+    # Auto-detect: API key starts with ck_, otherwise treat as JWT
+    if credential.startswith("ck_"):
+        session_id = store.add_session(email, jwt_token="", user_id="", refresh_token="", api_key=credential)
+    else:
+        session_id = store.add_session(email, jwt_token=credential, user_id="", refresh_token=refresh_tok)
+
     active = store.count_active()
     print(f"Added session #{session_id} for {email} (pool: {active} active)")
 
@@ -111,16 +117,25 @@ def cmd_list(_args):
     sessions = store.list_sessions()
 
     if not sessions:
-        print("No sessions. Use 'add' or 'add-har' to add tokens.")
+        print("No sessions. Use 'add' or 'batch-login' to add API keys.")
         return
 
-    print(f"{'ID':>4}  {'Status':<10}  {'Current':<8}  {'Email':<30}  {'Expires':<20}  {'User ID':<20}")
-    print("-" * 100)
+    print(f"{'ID':>4}  {'Status':<10}  {'Cur':<4}  {'Auth':<8}  {'Email':<30}  {'Credential':<20}")
+    print("-" * 85)
     for s in sessions:
         current = "*" if s.get("is_current") else ""
-        user_short = s.get("user_id", "")[:18] + ".." if len(s.get("user_id", "")) > 18 else s.get("user_id", "")
-        exp = s.get("expires_at", "")[:19] if s.get("expires_at") else "unknown"
-        print(f"{s['id']:>4}  {s['status']:<10}  {current:<8}  {s['email']:<30}  {exp:<20}  {user_short:<20}")
+        api_key = s.get("api_key", "")
+        jwt = s.get("jwt_token", "")
+        if api_key:
+            auth_type = "apikey"
+            cred = api_key[:15] + "..." if len(api_key) > 15 else api_key
+        elif jwt:
+            auth_type = "jwt"
+            cred = jwt[:15] + "..."
+        else:
+            auth_type = "none"
+            cred = "-"
+        print(f"{s['id']:>4}  {s['status']:<10}  {current:<4}  {auth_type:<8}  {s['email']:<30}  {cred:<20}")
 
     active = store.count_active()
     print(f"\nActive: {active}/{len(sessions)}")
@@ -172,13 +187,17 @@ def cmd_help(_args):
 aiproxy auth-engine — Session Manager
 
 Commands:
-  add <email> <jwt_token> [refresh_token]   Add a session manually
+  add <email> <api_key_or_jwt>              Add session (auto-detects ck_ vs JWT)
   add-har <har_file> [email_label]          Extract session from HAR file
   remove <email>                             Remove a session
   list                                       List all sessions
   refresh                                    Refresh all JWT tokens
-  batch-login [accounts_file] [options]      Batch login via Google OAuth
+  batch-login [accounts_file] [options]      Batch login via Google OAuth → API key
   help                                       Show this help
+
+Auth Flow:
+  batch-login → Camoufox Google OAuth → generate API key (ck_...) → store
+  Proxy reads api_key → hits CodeBuddy /v2/chat/completions with X-API-Key header
 
 Batch Login Options:
   --concurrency <n>    Max parallel browsers (default: 3)
@@ -187,10 +206,9 @@ Batch Login Options:
   --visible            Show browser windows
 
 Examples:
+  python -m src.main add user@gmail.com "ck_fl9e98b4d98g.xxxxx"
   python -m src.main add user@gmail.com "Bearer eyJhbG..."
-  python -m src.main add-har ~/Downloads/HTTPToolkit.har account1
   python -m src.main list
-  python -m src.main refresh
   python -m src.main batch-login accounts.txt --concurrency 5 --visible
 """)
 
