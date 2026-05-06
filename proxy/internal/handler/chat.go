@@ -72,13 +72,16 @@ func (h *ChatHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if mapped, ok := h.modelMap[req.Model]; ok && mapped != req.Model {
-		body = replaceModelInBody(body, req.Model, mapped)
-		slog.Debug("model mapped", "from", req.Model, "to", mapped)
-	}
-
 	// Force stream mode — CodeBuddy API key auth only supports streaming
 	body = ensureStream(body)
+
+	// Model mapping AFTER ensureStream (since ensureStream re-marshals JSON)
+	if mapped, ok := h.modelMap[req.Model]; ok && mapped != req.Model {
+		body = replaceModelInBody(body, req.Model, mapped)
+		slog.Info("model mapped", "from", req.Model, "to", mapped)
+	} else {
+		slog.Info("model not mapped", "model", req.Model, "map_size", len(h.modelMap))
+	}
 
 	// Track which sessions we've already tried to avoid retrying the same one
 	tried := make(map[int]bool)
