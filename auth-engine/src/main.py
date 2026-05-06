@@ -157,6 +157,16 @@ def cmd_refresh(args):
     print(f"Refreshed: {refreshed}, Failed: {failed}")
 
 
+def cmd_batch_login(args):
+    """Batch login via enowxai CodeBuddy adapter (Camoufox + Google OAuth)."""
+    import subprocess
+    src_dir = Path(__file__).parent
+
+    # Build command: python batch_login.py [accounts_file] [flags]
+    cmd = [sys.executable, str(src_dir / "batch_login.py")] + args
+    subprocess.run(cmd, cwd=str(src_dir))
+
+
 def cmd_help(_args):
     print("""
 aiproxy auth-engine — Session Manager
@@ -167,13 +177,21 @@ Commands:
   remove <email>                             Remove a session
   list                                       List all sessions
   refresh                                    Refresh all JWT tokens
+  batch-login [accounts_file] [options]      Batch login via Google OAuth
   help                                       Show this help
+
+Batch Login Options:
+  --concurrency <n>    Max parallel browsers (default: 3)
+  --delay <seconds>    Delay between account starts (default: 10)
+  --headless           Run browsers headless (default)
+  --visible            Show browser windows
 
 Examples:
   python -m src.main add user@gmail.com "Bearer eyJhbG..."
   python -m src.main add-har ~/Downloads/HTTPToolkit.har account1
   python -m src.main list
   python -m src.main refresh
+  python -m src.main batch-login accounts.txt --concurrency 5 --visible
 """)
 
 
@@ -188,6 +206,7 @@ def main():
         "remove": cmd_remove,
         "list": cmd_list,
         "refresh": cmd_refresh,
+        "batch-login": cmd_batch_login,
         "help": cmd_help,
     }
 

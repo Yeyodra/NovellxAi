@@ -1,0 +1,116 @@
+{
+  "url": "https://www.codebuddy.ai/auth/realms/copilot/protocol/openid-connect/auth?client_id=console&redirect_uri=https://www.codebuddy.ai/&response_type=code&scope=openid+profile+email+offline_access",
+  "title": "Sign in to copilot",
+  "links": [
+    {
+      "text": "Chinese (Simplified) (中文 (简体))",
+      "href": "https://www.codebuddy.ai/auth/realms/copilot/login-actions/authenticate?client_id=console&tab_id=JDc9TvVoI3A&client_data=eyJydSI6Imh0dHBzOi8vd3d3LmNvZGVidWRkeS5haS8iLCJydCI6ImNvZGUifQ&execution=fddd3124-02c5-4e2e-9e11-2849f14b804f&kc_locale=zh-CN",
+      "id": "language-1",
+      "cls": ""
+    },
+    {
+      "text": "English",
+      "href": "https://www.codebuddy.ai/auth/realms/copilot/login-actions/authenticate?client_id=console&tab_id=JDc9TvVoI3A&client_data=eyJydSI6Imh0dHBzOi8vd3d3LmNvZGVidWRkeS5haS8iLCJydCI6ImNvZGUifQ&execution=fddd3124-02c5-4e2e-9e11-2849f14b804f&kc_locale=en",
+      "id": "language-2",
+      "cls": ""
+    },
+    {
+      "text": "",
+      "href": "https://www.codebuddy.ai/",
+      "id": "",
+      "cls": "header-logo"
+    },
+    {
+      "text": "Sign up with Google",
+      "href": "https://www.codebuddy.ai/auth/realms/copilot/broker/google/login?client_id=console&tab_id=JDc9TvVoI3A&client_data=eyJydSI6Imh0dHBzOi8vd3d3LmNvZGVidWRkeS5haS8iLCJydCI6ImNvZGUifQ&session_code=JVlXz0_Zuj_HVWGooI7sfbUBd373tcET-Ih7FY292no",
+      "id": "social-google",
+      "cls": "\n sp-button"
+    },
+    {
+      "text": "Sign up with GitHub",
+      "href": "https://www.codebuddy.ai/auth/realms/copilot/broker/github/login?client_id=console&tab_id=JDc9TvVoI3A&client_data=eyJydSI6Imh0dHBzOi8vd3d3LmNvZGVidWRkeS5haS8iLCJydCI6ImNvZGUifQ&session_code=JVlXz0_Zuj_HVWGooI7sfbUBd373tcET-Ih7FY292no",
+      "id": "social-github",
+      "cls": "\n sp-button"
+    },
+    {
+      "text": "Privacy Policy,",
+      "href": "https://www.codebuddy.ai/document/privacy-policy",
+      "id": "",
+      "cls": ""
+    },
+    {
+      "text": "Data Processing and Security Agreement,",
+      "href": "https://www.codebuddy.ai/document/dpsa",
+      "id": "",
+      "cls": ""
+    },
+    {
+      "text": "Tencent Cloud CodeBuddy Service Agreement",
+      "href": "https://www.codebuddy.ai/document/term",
+      "id": "",
+      "cls": ""
+    },
+    {
+      "text": "Log in with Google",
+      "href": "https://www.codebuddy.ai/auth/realms/copilot/broker/google/login?client_id=console&tab_id=JDc9TvVoI3A&client_data=eyJydSI6Imh0dHBzOi8vd3d3LmNvZGVidWRkeS5haS8iLCJydCI6ImNvZGUifQ&session_code=JVlXz0_Zuj_HVWGooI7sfbUBd373tcET-Ih7FY292no",
+      "id": "social-google",
+      "cls": "\n sp-button"
+    },
+    {
+      "text": "Log in with GitHub",
+      "href": "https://www.codebuddy.ai/auth/realms/copilot/broker/github/login?client_id=console&tab_id=JDc9TvVoI3A&client_data=eyJydSI6Imh0dHBzOi8vd3d3LmNvZGVidWRkeS5haS8iLCJydCI6ImNvZGUifQ&session_code=JVlXz0_Zuj_HVWGooI7sfbUBd373tcET-Ih7FY292no",
+      "id": "social-github",
+      "cls": "\n sp-button"
+    },
+    {
+      "text": "Forgot Password?",
+      "href": "https://www.codebuddy.ai/auth/realms/copilot/login-actions/reset-credentials?client_id=console&tab_id=JDc9TvVoI3A&client_data=eyJydSI6Imh0dHBzOi8vd3d3LmNvZGVidWRkeS5haS8iLCJydCI6ImNvZGUifQ",
+      "id": "",
+      "cls": ""
+    },
+    {
+      "text": "Privacy Policy,",
+      "href": "https://www.codebuddy.ai/document/privacy-policy",
+      "id": "",
+      "cls": ""
+    },
+    {
+      "text": "Data Processing and Security Agreement,",
+      "href": "https://www.codebuddy.ai/document/dpsa",
+      "id": "",
+      "cls": ""
+    },
+    {
+      "text": "Tencent Cloud CodeBuddy Service Agreement",
+      "href": "https://www.codebuddy.ai/document/term",
+      "id": "",
+      "cls": ""
+    },
+    {
+      "text": "Contact support",
+      "href": "mailto:codebuddy@tencent.com",
+      "id": "",
+      "cls": "blod-text"
+    }
+  ],
+  "buttons": [
+    {
+      "text": "",
+      "id": "maintenance-close-btn",
+      "cls": "maintenance-close",
+      "type": "submit"
+    },
+    {
+      "text": "English",
+      "id": "kc-current-locale-link",
+      "cls": "",
+      "type": "submit"
+    },
+    {
+      "text": "",
+      "id": "kc-login",
+      "cls": "   submit-button sp-button",
+      "type": "submit"
+    }
+  ]
+}

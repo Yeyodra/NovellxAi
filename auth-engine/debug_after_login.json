@@ -1,0 +1,34 @@
+{
+  "url": "https://accounts.google.com/v3/signin/identifier?opparams=%253F&client_id=325283565286-5g01ad6p3aka5mm4rei2qapu6bnjhncb.apps.googleusercontent.com&nonce=Tmm2jTjbGtsGfQgv7Z5bqg&o2v=2&redirect_uri=https%3A%2F%2Fwww.codebuddy.ai%2Fauth%2Frealms%2Fcopilot%2Fbroker%2Fgoogle%2Fendpoint&response_type=code&scope=openid+profile+email&service=lso&state=zAe1dso_yk4WWWoXlpPnJFMJXIMdGfUvjmLkf67yonI.rTUSG4e0Nk0.P-uWbBFRQqaWGVrImai6iA.eyJydSI6Imh0dHBzOi8vd3d3LmNvZGVidWRkeS5haS8iLCJydCI6ImNvZGUifQ&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAO1ZsbTkIavaFMOr2ytAYW4L_aG5xlBGgzyPGqZFaoAxMUDUWHRHIXi40UE41tLq-lI0iQ_pW3lNoW1RvEF2hNilb0p4_Bl-F75HAESVFuYInAb2BU_6wZQvK83FrvWoFQAWAsMn_zqAl7H97uDsM_fR9MlgUbYFx17QsbNVRH0w0_jTyJ0_WK02yApO0qWtrVziSmf4FoKdn4EGkAnN4hKbBQCROc9aGizHI1nFJFSh-uFOTXK1tdDLbrR8nxrXyajcACk6BsTJ0P7EncI8UXITzyi3hnejA2ExLDjTsoIg91fT5c0Cs90jbLcNNcin0coE_KbYZdQjDI0G_jG-y9z8ycHm0jB5KzL4XgVURzj4YXFmtQI21R12VMtffouZUWLHrIeKT22EIpjdeC6ShofFO2uMnZBlIU1xV7yIYI1Jd-DNA-BfrEtk7SV4G1mITjwin2HDxScSCqcKWHWC8hCCoGZDA%26flowName%3DGeneralOAuthFlow%26as%3DS-248192237%253A1778076728333917%26client_id%3D325283565286-5g01ad6p3aka5mm4rei2qapu6bnjhncb.apps.googleusercontent.com%26requestPath%3D%252Fsignin%252Foauth%252Fconsent%23&app_domain=https%3A%2F%2Fwww.codebuddy.ai&rart=ANgoxcerV-919FZAPcUdSrbqj5qG9lQqv1jZQE1In9XGlzss-h2ybImXE20zZ6yNnHkjk4kSkZwmkf4sc0q7V3ylzjJn5YFRaV9PoJ_H78EK7SeUbBwx0sQ",
+  "cookies": [
+    {
+      "name": "AUTH_SESSION_ID",
+      "value": "fc9c5183-7c64-4ec9-955e-ebd4bd5f0cfe.keycloaky-7-59466",
+      "domain": "www.codebuddy.ai"
+    },
+    {
+      "name": "KC_RESTART",
+      "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..2VVCgNFDObSwq1ILT02kUA.KQvCcf3S...",
+      "domain": "www.codebuddy.ai"
+    },
+    {
+      "name": "__Host-GAPS",
+      "value": "1:mvv_d8U7rUAzs8lHnuBBqTHBnoBOmg:jZnIqEl5PYgSOCYv",
+      "domain": "accounts.google.com"
+    },
+    {
+      "name": "OTZ",
+      "value": "8596212_28_28__28_",
+      "domain": "accounts.google.com"
+    },
+    {
+      "name": "NID",
+      "value": "531=FicMfOjWuet8qIcOPnq8v3NvBQwj_rU7c6Bhdj3HKQwuU2b5CjQWFjpBhI6RvP0fndlWNzL3duha...",
+      "domain": ".google.com"
+    }
+  ],
+  "token_check": {
+    "document_cookie": "OTZ=8596212_28_28__28_"
+  },
+  "localStorage_raw": "{}"
+}

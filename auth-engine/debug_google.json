@@ -1,0 +1,56 @@
+{
+  "url": "https://www.codebuddy.ai/auth/realms/copilot/protocol/openid-connect/auth?client_id=console&redirect_uri=https://www.codebuddy.ai/&response_type=code&scope=openid+profile+email+offline_access",
+  "title": "Sign in to copilot",
+  "inputs": [
+    {
+      "id": "agree-policy-account",
+      "name": "",
+      "type": "checkbox",
+      "placeholder": "",
+      "visible": false
+    },
+    {
+      "id": "username",
+      "name": "username",
+      "type": "text",
+      "placeholder": "Email",
+      "visible": false
+    },
+    {
+      "id": "password",
+      "name": "password",
+      "type": "password",
+      "placeholder": "Password",
+      "visible": false
+    },
+    {
+      "id": "rememberMe",
+      "name": "rememberMe",
+      "type": "checkbox",
+      "placeholder": "",
+      "visible": false
+    },
+    {
+      "id": "id-hidden-input",
+      "name": "credentialId",
+      "type": "hidden",
+      "placeholder": "",
+      "visible": false
+    },
+    {
+      "id": "kc-login",
+      "name": "login",
+      "type": "submit",
+      "placeholder": "",
+      "visible": false
+    },
+    {
+      "id": "agree-policy",
+      "name": "",
+      "type": "checkbox",
+      "placeholder": "",
+      "visible": false
+    }
+  ],
+  "body_text": "Sign up\nLog in\nSign up with Google\nSign up with GitHub\nI confirm that I have read and acknowledge the Privacy Policy, Data Processing and Security Agreement, Tencent Cloud CodeBuddy Service Agreement\nNeed help? Contact support\n关闭\nService Agreement and Privacy Terms\n\nI confirm that I have read and acknowledge the Privacy Policy, Data Processing and Security Agreement, Tencent Cloud CodeBuddy Service Agreement\n\nConfirmCancel"
+}
