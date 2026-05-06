@@ -22,16 +22,18 @@ type Data struct {
 }
 
 type Session struct {
-	ID         int    `json:"id"`
-	Email      string `json:"email"`
-	AccountID  string `json:"account_id"`
-	JWTToken   string `json:"jwt_token"`   // Bearer token (JWT from Keycloak)
-	UserID     string `json:"user_id"`     // X-User-Id header
-	Status     string `json:"status"`      // active|exhausted|expired|banned
-	IsCurrent  bool   `json:"is_current"`
-	LastUsedAt string `json:"last_used_at"`
-	ExpiresAt  string `json:"expires_at"`
-	CreatedAt  string `json:"created_at"`
+	ID            int    `json:"id"`
+	Email         string `json:"email"`
+	AccountID     string `json:"account_id"`
+	JWTToken      string `json:"jwt_token"`      // Bearer token (JWT from Keycloak)
+	UserID        string `json:"user_id"`        // X-User-Id header
+	RefreshToken  string `json:"refresh_token"`  // For token refresh
+	Status        string `json:"status"`         // active|exhausted|expired|banned
+	IsCurrent     bool   `json:"is_current"`
+	RemainingQuota int   `json:"remaining_quota"`
+	LastUsedAt    string `json:"last_used_at"`
+	ExpiresAt     string `json:"expires_at"`
+	CreatedAt     string `json:"created_at"`
 }
 
 type Account struct {
@@ -250,6 +252,20 @@ func (s *Store) InsertAccount(id, email, enterpriseID string) error {
 		Status: "active", CreatedAt: now(),
 	})
 	return s.save()
+}
+
+func (s *Store) UpdateSessionTokens(sessionID int, jwtToken, refreshToken, expiresAt string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for i := range s.data.Sessions {
+		if s.data.Sessions[i].ID == sessionID {
+			s.data.Sessions[i].JWTToken = jwtToken
+			s.data.Sessions[i].RefreshToken = refreshToken
+			s.data.Sessions[i].ExpiresAt = expiresAt
+			return s.save()
+		}
+	}
+	return fmt.Errorf("session %d not found", sessionID)
 }
 
 func (s *Store) GetAllSessions() []Session {

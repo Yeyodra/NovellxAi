@@ -65,6 +65,8 @@ func (h *ChatHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		slog.Info("proxy request", "model", req.Model, "account", sess.Email, "session_id", sess.ID)
+
 		start := time.Now()
 		resp, err := h.client.ChatCompletion(r.Context(), sess.JWTToken, sess.UserID, body)
 		latency := time.Since(start)

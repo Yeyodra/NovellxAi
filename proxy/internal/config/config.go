@@ -8,12 +8,20 @@ import (
 )
 
 type Config struct {
-	Server   ServerConfig            `yaml:"server"`
-	Upstream UpstreamConfig          `yaml:"upstream"`
-	KeyPool  KeyPoolConfig           `yaml:"keypool"`
-	Database DatabaseConfig          `yaml:"database"`
-	ModelMap map[string]string       `yaml:"model_map"`
-	Logging  LoggingConfig           `yaml:"logging"`
+	Server    ServerConfig      `yaml:"server"`
+	Upstream  UpstreamConfig    `yaml:"upstream"`
+	KeyPool   KeyPoolConfig     `yaml:"keypool"`
+	Database  DatabaseConfig    `yaml:"database"`
+	ModelMap  map[string]string `yaml:"model_map"`
+	Logging   LoggingConfig     `yaml:"logging"`
+	Refresher RefresherConfig   `yaml:"refresher"`
+}
+
+type RefresherConfig struct {
+	Enabled       bool          `yaml:"enabled"`
+	Interval      time.Duration `yaml:"interval"`
+	RefreshBuffer time.Duration `yaml:"refresh_buffer"`
+	MaxRetries    int           `yaml:"max_retries"`
 }
 
 type ServerConfig struct {
@@ -66,6 +74,12 @@ func Load(path string) (*Config, error) {
 		},
 		Logging: LoggingConfig{
 			Level: "info",
+		},
+		Refresher: RefresherConfig{
+			Enabled:       true,
+			Interval:      5 * time.Minute,
+			RefreshBuffer: 10 * time.Minute,
+			MaxRetries:    3,
 		},
 	}
 

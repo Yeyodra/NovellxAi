@@ -1,216 +1,204 @@
-"""Main CLI entry point for auth engine."""
-import asyncio
-import logging
+"""CLI for managing aiproxy sessions — add, remove, list, refresh JWT tokens."""
 import sys
+import json
+import logging
 from pathlib import Path
 
-import click
+from .config import STORE_PATH
+from .store.db import Store
+from .codebuddy.auth import refresh_token
 
-from .config import settings
-from .store.db import DB
-from .oauth.google_login import GoogleOAuth
-from .codebuddy.auth import CodeBuddyAuth
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
 
 
-def load_accounts(path: str) -> list[tuple[str, str]]:
-    """Load email:password pairs from accounts file."""
-    accounts = []
-    p = Path(path)
-    if not p.exists():
-        log.warning(f"Accounts file not found: {path}")
-        return accounts
+def cmd_add(args):
+    """Add a session from JWT token."""
+    store = Store(STORE_PATH)
 
-    for line in p.read_text().strip().splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        # Support email:password or email|password
-        sep = "|" if "|" in line else ":"
-        parts = line.split(sep, 1)
-        if len(parts) == 2:
-            accounts.append((parts[0].strip(), parts[1].strip()))
-    return accounts
-
-
-async def farm_single_account(email: str, password: str, db: DB) -> bool:
-    """Full pipeline: OAuth -> region setup -> create API key -> store in DB."""
-    log.info(f"=== Farming: {email} ===")
-
-    # Step 1: Get auth state from CodeBuddy
-    try:
-        auth_data = CodeBuddyAuth.get_auth_state()
-        auth_url = auth_data.get("authUrl", "")
-        if not auth_url:
-            log.error(f"No auth URL returned for {email}")
-            return False
-    except Exception as e:
-        log.error(f"Failed to get auth state: {e}")
-        return False
-
-    # Step 2: Browser OAuth login
-    oauth = GoogleOAuth(email, password)
-    result = await oauth.login(auth_url)
-
-    if not result.get("success"):
-        log.error(f"OAuth failed for {email}: {result.get('error', 'unknown')}")
-        return False
-
-    cookies = result["cookies"]
-    if not cookies:
-        log.error(f"No cookies obtained for {email}")
-        return False
-
-    # Step 3-5: CodeBuddy API interactions
-    cb = CodeBuddyAuth(cookies)
-    try:
-        # Setup region
-        cb.setup_region()
-
-        # Get enterprise ID
-        enterprise_id = cb.get_enterprise_id()
-        if not enterprise_id:
-            log.error(f"No enterprise ID for {email}")
-            return False
-
-        # Register + activate trial
-        cb.register_user(enterprise_id)
-        cb.activate_trial()
-
-        # Create API key
-        api_key = cb.create_api_key(enterprise_id)
-        if not api_key:
-            log.error(f"Failed to create API key for {email}")
-            return False
-
-        # Claim gift credits
-        cb.claim_gift()
-
-        # Store in shared SQLite
-        account_id = db.insert_account(email, enterprise_id)
-        db.insert_key(api_key, account_id, email, enterprise_id)
-        db.update_account_login(email)
-
-        active = db.count_active_keys()
-        log.info(f"SUCCESS: {email} -> {api_key[:15]}... (pool: {active} active keys)")
-        return True
-
-    except Exception as e:
-        log.error(f"CodeBuddy API error for {email}: {e}")
-        return False
-    finally:
-        cb.close()
-
-
-@click.group()
-def cli():
-    """AI Proxy Auth Engine - CodeBuddy key farmer."""
-    pass
-
-
-@cli.command()
-@click.option("--count", default=0, help="Max accounts to process (0 = all)")
-@click.option("--accounts-file", default=settings.ACCOUNTS_FILE, help="Path to accounts.txt")
-def farm(count: int, accounts_file: str):
-    """Farm API keys from CodeBuddy accounts."""
-    db = DB()
-    accounts = load_accounts(accounts_file)
-
-    if not accounts:
-        log.error("No accounts found. Create accounts.txt with email:password lines.")
+    if len(args) < 2:
+        print("Usage: python -m src.main add <email> <jwt_token> [refresh_token]")
+        print("")
+        print("  jwt_token: The full Bearer token (with or without 'Bearer ' prefix)")
+        print("  refresh_token: Optional, for automatic token refresh")
+        print("")
+        print("How to get JWT token:")
+        print("  1. Open HTTP Toolkit or browser DevTools")
+        print("  2. Use CodeBuddy CLI or extension")
+        print("  3. Find request to /v2/chat/completions")
+        print("  4. Copy the Authorization header value")
         sys.exit(1)
 
-    if count > 0:
-        accounts = accounts[:count]
+    email = args[0]
+    jwt_token = args[1]
+    refresh_tok = args[2] if len(args) > 2 else ""
 
-    log.info(f"Farming {len(accounts)} accounts...")
+    session_id = store.add_session(email, jwt_token, user_id="", refresh_token=refresh_tok)
+    active = store.count_active()
+    print(f"Added session #{session_id} for {email} (pool: {active} active)")
 
-    success = 0
+
+def cmd_add_from_har(args):
+    """Add session(s) from HAR file — auto-extracts JWT tokens."""
+    store = Store(STORE_PATH)
+
+    if len(args) < 1:
+        print("Usage: python -m src.main add-har <path-to-har-file> [email-label]")
+        sys.exit(1)
+
+    har_path = args[0]
+    email_label = args[1] if len(args) > 1 else "har-import"
+
+    if not Path(har_path).exists():
+        print(f"File not found: {har_path}")
+        sys.exit(1)
+
+    har = json.loads(Path(har_path).read_text(encoding="utf-8"))
+    entries = har.get("log", {}).get("entries", [])
+
+    # Find chat completions requests to extract tokens
+    found = 0
+    for entry in entries:
+        url = entry.get("request", {}).get("url", "")
+        status = entry.get("response", {}).get("status", 0)
+
+        if "v2/chat/completions" in url and status == 200:
+            headers = entry["request"].get("headers", [])
+            auth = next((h["value"] for h in headers if h["name"] == "Authorization"), "")
+            user_id = next((h["value"] for h in headers if h["name"] == "X-User-Id"), "")
+
+            if auth and user_id:
+                # Find refresh token from same session
+                refresh_tok = ""
+                for e2 in entries:
+                    if "auth/token/refresh" in e2.get("request", {}).get("url", ""):
+                        rh = e2["request"].get("headers", [])
+                        rt = next((h["value"] for h in rh if h["name"] == "X-Refresh-Token"), "")
+                        if rt:
+                            refresh_tok = rt
+                            break
+
+                label = f"{email_label}-{found + 1}" if found > 0 else email_label
+                session_id = store.add_session(label, auth, user_id, refresh_tok)
+                found += 1
+                print(f"Extracted session #{session_id} (user: {user_id[:20]}..., refresh: {'yes' if refresh_tok else 'no'})")
+                break  # Only need 1 token per HAR (they share same session)
+
+    if found == 0:
+        print("No valid tokens found in HAR file")
+        sys.exit(1)
+
+    active = store.count_active()
+    print(f"Total active sessions: {active}")
+
+
+def cmd_remove(args):
+    """Remove a session by email."""
+    store = Store(STORE_PATH)
+    if len(args) < 1:
+        print("Usage: python -m src.main remove <email>")
+        sys.exit(1)
+
+    if store.remove_session(args[0]):
+        print(f"Removed {args[0]}")
+    else:
+        print(f"Not found: {args[0]}")
+
+
+def cmd_list(_args):
+    """List all sessions."""
+    store = Store(STORE_PATH)
+    sessions = store.list_sessions()
+
+    if not sessions:
+        print("No sessions. Use 'add' or 'add-har' to add tokens.")
+        return
+
+    print(f"{'ID':>4}  {'Status':<10}  {'Current':<8}  {'Email':<30}  {'Expires':<20}  {'User ID':<20}")
+    print("-" * 100)
+    for s in sessions:
+        current = "*" if s.get("is_current") else ""
+        user_short = s.get("user_id", "")[:18] + ".." if len(s.get("user_id", "")) > 18 else s.get("user_id", "")
+        exp = s.get("expires_at", "")[:19] if s.get("expires_at") else "unknown"
+        print(f"{s['id']:>4}  {s['status']:<10}  {current:<8}  {s['email']:<30}  {exp:<20}  {user_short:<20}")
+
+    active = store.count_active()
+    print(f"\nActive: {active}/{len(sessions)}")
+
+
+def cmd_refresh(args):
+    """Refresh JWT tokens for all active sessions that have refresh tokens."""
+    store = Store(STORE_PATH)
+    sessions = store.list_sessions()
+
+    refreshed = 0
     failed = 0
 
-    for email, password in accounts:
-        try:
-            ok = asyncio.run(farm_single_account(email, password, db))
-            if ok:
-                success += 1
-            else:
-                failed += 1
-        except Exception as e:
-            log.error(f"Unexpected error for {email}: {e}")
+    for s in sessions:
+        if s["status"] != "active":
+            continue
+        if not s.get("refresh_token"):
+            log.info(f"Skipping {s['email']} — no refresh token")
+            continue
+
+        log.info(f"Refreshing {s['email']}...")
+        result = refresh_token(s["jwt_token"], s["refresh_token"], s["user_id"])
+
+        if result:
+            new_jwt = f"Bearer {result['accessToken']}"
+            new_refresh = result.get("refreshToken", s["refresh_token"])
+            store.add_session(s["email"], new_jwt, s["user_id"], new_refresh)
+            refreshed += 1
+            log.info(f"Refreshed {s['email']}")
+        else:
             failed += 1
+            log.error(f"Failed to refresh {s['email']}")
 
-    log.info(f"Done: {success} success, {failed} failed")
-    active = db.count_active_keys()
-    log.info(f"Total active keys in pool: {active}")
-    db.close()
+    print(f"Refreshed: {refreshed}, Failed: {failed}")
 
 
-@cli.command()
-@click.option("--accounts-file", default=settings.ACCOUNTS_FILE)
-def claim_credits(accounts_file: str):
-    """Claim daily gift credits for all accounts."""
-    db = DB()
-    accounts = load_accounts(accounts_file)
-    claimed = 0
+def cmd_help(_args):
+    print("""
+aiproxy auth-engine — Session Manager
 
-    for email, password in accounts:
-        try:
-            # Need to login first to get session cookies
-            ok = asyncio.run(_claim_for_account(email, password))
-            if ok:
-                claimed += 1
-        except Exception as e:
-            log.error(f"Claim failed for {email}: {e}")
+Commands:
+  add <email> <jwt_token> [refresh_token]   Add a session manually
+  add-har <har_file> [email_label]          Extract session from HAR file
+  remove <email>                             Remove a session
+  list                                       List all sessions
+  refresh                                    Refresh all JWT tokens
+  help                                       Show this help
 
-    log.info(f"Credits claimed for {claimed}/{len(accounts)} accounts")
-    db.close()
-
-
-async def _claim_for_account(email: str, password: str) -> bool:
-    """Login and claim credits for one account."""
-    auth_data = CodeBuddyAuth.get_auth_state()
-    auth_url = auth_data.get("authUrl", "")
-    if not auth_url:
-        return False
-
-    oauth = GoogleOAuth(email, password)
-    result = await oauth.login(auth_url)
-    if not result.get("success"):
-        return False
-
-    cb = CodeBuddyAuth(result["cookies"])
-    try:
-        return cb.claim_gift()
-    finally:
-        cb.close()
+Examples:
+  python -m src.main add user@gmail.com "Bearer eyJhbG..."
+  python -m src.main add-har ~/Downloads/HTTPToolkit.har account1
+  python -m src.main list
+  python -m src.main refresh
+""")
 
 
-@cli.command()
-def status():
-    """Show current key pool status."""
-    db = DB()
-    active = db.count_active_keys()
-    print(f"Active keys: {active}")
-    db.close()
+def main():
+    if len(sys.argv) < 2:
+        cmd_help([])
+        sys.exit(1)
 
+    commands = {
+        "add": cmd_add,
+        "add-har": cmd_add_from_har,
+        "remove": cmd_remove,
+        "list": cmd_list,
+        "refresh": cmd_refresh,
+        "help": cmd_help,
+    }
 
-@cli.command()
-@click.argument("api_key")
-@click.option("--email", default="manual", help="Account email")
-def add_key(api_key: str, email: str):
-    """Manually add an API key to the pool."""
-    db = DB()
-    account_id = db.insert_account(email)
-    db.insert_key(api_key, account_id, email)
-    active = db.count_active_keys()
-    print(f"Key added. Active keys: {active}")
-    db.close()
+    cmd = sys.argv[1]
+    if cmd not in commands:
+        print(f"Unknown command: {cmd}")
+        cmd_help([])
+        sys.exit(1)
+
+    commands[cmd](sys.argv[2:])
 
 
 if __name__ == "__main__":
-    cli()
+    main()

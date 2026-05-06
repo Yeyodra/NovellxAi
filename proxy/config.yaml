@@ -24,3 +24,9 @@ model_map:
 
 logging:
   level: "info"
+
+refresher:
+  enabled: true
+  interval: 5m
+  refresh_buffer: 10m
+  max_retries: 3

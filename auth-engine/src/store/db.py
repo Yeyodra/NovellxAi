@@ -1,76 +1,130 @@
-"""SQLite store - shared with Go proxy."""
-import sqlite3
-import uuid
+"""Shared JSON store — same format as Go proxy reads."""
+import json
+import os
+import time
+import base64
 from pathlib import Path
 from typing import Optional
 
-from .config import settings
 
+class Store:
+    def __init__(self, path: str):
+        self.path = path
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        self.data = {"sessions": [], "accounts": [], "request_log": []}
+        self._load()
 
-class DB:
-    def __init__(self, db_path: Optional[str] = None):
-        self.db_path = db_path or settings.DB_PATH
-        Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
-        self._conn: Optional[sqlite3.Connection] = None
+    def _load(self):
+        if os.path.exists(self.path):
+            raw = open(self.path, "r", encoding="utf-8").read()
+            # Strip BOM
+            if raw.startswith("\ufeff"):
+                raw = raw[1:]
+            if raw.strip():
+                self.data = json.loads(raw)
 
-    @property
-    def conn(self) -> sqlite3.Connection:
-        if self._conn is None:
-            self._conn = sqlite3.connect(self.db_path)
-            self._conn.execute("PRAGMA journal_mode = WAL")
-            self._conn.execute("PRAGMA busy_timeout = 5000")
-            self._conn.execute("PRAGMA synchronous = NORMAL")
-            self._conn.execute("PRAGMA foreign_keys = ON")
-            self._conn.row_factory = sqlite3.Row
-        return self._conn
+    def _save(self):
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump(self.data, f, indent=2, ensure_ascii=False)
 
-    def close(self):
-        if self._conn:
-            self._conn.close()
-            self._conn = None
+    def _next_id(self) -> int:
+        ids = [s["id"] for s in self.data["sessions"]]
+        return max(ids, default=0) + 1
 
-    def insert_account(self, email: str, enterprise_id: str = "") -> str:
-        account_id = str(uuid.uuid4())
-        self.conn.execute(
-            "INSERT OR IGNORE INTO accounts (id, email, enterprise_id) VALUES (?, ?, ?)",
-            (account_id, email, enterprise_id),
-        )
-        self.conn.commit()
-        # Return existing id if already existed
-        row = self.conn.execute("SELECT id FROM accounts WHERE email = ?", (email,)).fetchone()
-        return row["id"] if row else account_id
+    def add_session(self, email: str, jwt_token: str, user_id: str, refresh_token: str = ""):
+        """Add or update a session. If email exists, update token."""
+        # Ensure jwt_token has Bearer prefix
+        if not jwt_token.startswith("Bearer "):
+            jwt_token = f"Bearer {jwt_token}"
 
-    def insert_key(self, api_key: str, account_id: str, email: str, enterprise_id: str = ""):
-        self.conn.execute(
-            "INSERT OR IGNORE INTO keys (api_key, account_id, email, enterprise_id) VALUES (?, ?, ?, ?)",
-            (api_key, account_id, email, enterprise_id),
-        )
-        self.conn.commit()
+        # Auto-detect user_id from JWT if not provided
+        if not user_id:
+            user_id = self._extract_sub_from_jwt(jwt_token)
 
-    def update_account_enterprise(self, email: str, enterprise_id: str):
-        self.conn.execute(
-            "UPDATE accounts SET enterprise_id = ? WHERE email = ?",
-            (enterprise_id, email),
-        )
-        self.conn.commit()
+        # Auto-detect expiry from JWT
+        expires_at = self._extract_exp_from_jwt(jwt_token)
 
-    def update_account_login(self, email: str):
-        self.conn.execute(
-            "UPDATE accounts SET last_login_at = datetime('now') WHERE email = ?",
-            (email,),
-        )
-        self.conn.commit()
+        for i, s in enumerate(self.data["sessions"]):
+            if s["email"] == email:
+                self.data["sessions"][i]["jwt_token"] = jwt_token
+                self.data["sessions"][i]["user_id"] = user_id
+                self.data["sessions"][i]["refresh_token"] = refresh_token
+                self.data["sessions"][i]["status"] = "active"
+                self.data["sessions"][i]["expires_at"] = expires_at
+                self._save()
+                return self.data["sessions"][i]["id"]
 
-    def get_account_by_email(self, email: str) -> Optional[dict]:
-        row = self.conn.execute("SELECT * FROM accounts WHERE email = ?", (email,)).fetchone()
-        return dict(row) if row else None
+        session = {
+            "id": self._next_id(),
+            "email": email,
+            "account_id": email,
+            "jwt_token": jwt_token,
+            "user_id": user_id,
+            "refresh_token": refresh_token,
+            "status": "active",
+            "is_current": len(self.data["sessions"]) == 0,  # First one becomes current
+            "remaining_quota": 0,
+            "last_used_at": "",
+            "expires_at": expires_at,
+            "created_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+        }
+        self.data["sessions"].append(session)
 
-    def count_active_keys(self) -> int:
-        row = self.conn.execute("SELECT COUNT(*) as cnt FROM keys WHERE status = 'active'").fetchone()
-        return row["cnt"]
+        # Also add account entry
+        emails = [a["email"] for a in self.data["accounts"]]
+        if email not in emails:
+            self.data["accounts"].append({
+                "id": email,
+                "email": email,
+                "enterprise_id": "",
+                "status": "active",
+                "last_login_at": "",
+                "created_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+            })
 
-    def count_keys_for_account(self, account_id: str) -> int:
-        row = self.conn.execute(
-            "SELECT COUNT(*) as cnt FROM keys WHERE account_id = ?", (account_id,)
-        ).fetchone()
-        return row["cnt"]
+        self._save()
+        return session["id"]
+
+    def remove_session(self, email: str) -> bool:
+        before = len(self.data["sessions"])
+        self.data["sessions"] = [s for s in self.data["sessions"] if s["email"] != email]
+        if len(self.data["sessions"]) < before:
+            self._save()
+            return True
+        return False
+
+    def list_sessions(self) -> list[dict]:
+        return self.data["sessions"]
+
+    def count_active(self) -> int:
+        return sum(1 for s in self.data["sessions"] if s["status"] == "active")
+
+    def _extract_sub_from_jwt(self, jwt_token: str) -> str:
+        """Extract 'sub' (user ID) from JWT payload."""
+        try:
+            token = jwt_token.replace("Bearer ", "")
+            payload_b64 = token.split(".")[1]
+            # Add padding
+            padding = 4 - len(payload_b64) % 4
+            if padding != 4:
+                payload_b64 += "=" * padding
+            payload = json.loads(base64.urlsafe_b64decode(payload_b64))
+            return payload.get("sub", "")
+        except Exception:
+            return ""
+
+    def _extract_exp_from_jwt(self, jwt_token: str) -> str:
+        """Extract expiry from JWT payload."""
+        try:
+            token = jwt_token.replace("Bearer ", "")
+            payload_b64 = token.split(".")[1]
+            padding = 4 - len(payload_b64) % 4
+            if padding != 4:
+                payload_b64 += "=" * padding
+            payload = json.loads(base64.urlsafe_b64decode(payload_b64))
+            exp = payload.get("exp", 0)
+            if exp:
+                return time.strftime("%Y-%m-%dT%H:%M:%S%z", time.localtime(exp))
+        except Exception:
+            pass
+        return ""

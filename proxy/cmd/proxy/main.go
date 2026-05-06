@@ -1,17 +1,22 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
+	"strings"
 	"syscall"
+	"time"
 
 	"github.com/hanni/aiproxy/proxy/internal/config"
 	"github.com/hanni/aiproxy/proxy/internal/handler"
 	"github.com/hanni/aiproxy/proxy/internal/keypool"
 	"github.com/hanni/aiproxy/proxy/internal/middleware"
+	"github.com/hanni/aiproxy/proxy/internal/refresher"
 	"github.com/hanni/aiproxy/proxy/internal/store"
 	"github.com/hanni/aiproxy/proxy/internal/upstream"
 )
@@ -19,6 +24,9 @@ import (
 func main() {
 	configPath := flag.String("config", "config.yaml", "path to config file")
 	flag.Parse()
+
+	// Track server start time
+	startTime := time.Now()
 
 	// Load config
 	cfg, err := config.Load(*configPath)
@@ -60,11 +68,42 @@ func main() {
 	mux.Handle("/v1/chat/completions", handler.NewChatHandler(pool, client, db, cfg.ModelMap, cfg.Upstream.MaxRetries))
 	mux.Handle("/v1/models", handler.NewModelsHandler(cfg.ModelMap))
 	mux.Handle("/health", handler.NewHealthHandler(pool))
+	mux.Handle("/api/dashboard", handler.NewDashboardHandler(pool, db, startTime))
 
-	// Apply middleware
-	var h http.Handler = mux
-	h = middleware.Logger(h)
-	h = middleware.Auth(cfg.Server.AuthToken)(h)
+	// Serve dashboard static files from ../dashboard/dist/
+	// Resolve relative to the executable location
+	exePath, _ := os.Executable()
+	exeDir := filepath.Dir(exePath)
+	dashboardDir := filepath.Join(exeDir, "..", "dashboard", "dist")
+	// Fallback: try relative to working directory
+	if _, err := os.Stat(dashboardDir); os.IsNotExist(err) {
+		dashboardDir = filepath.Join(".", "..", "dashboard", "dist")
+	}
+	fs := http.FileServer(http.Dir(dashboardDir))
+	mux.Handle("/", fs)
+
+	// Apply middleware — skip auth for /api/, /health, and static files
+	var h http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Skip auth for dashboard API, health, and static files
+		if strings.HasPrefix(r.URL.Path, "/api/") ||
+			r.URL.Path == "/health" ||
+			!strings.HasPrefix(r.URL.Path, "/v1/") {
+			middleware.Logger(mux).ServeHTTP(w, r)
+			return
+		}
+		// Apply auth only for /v1/ routes
+		middleware.Logger(middleware.Auth(cfg.Server.AuthToken)(mux)).ServeHTTP(w, r)
+	})
+
+	// Context for graceful shutdown
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// Start token refresher
+	if cfg.Refresher.Enabled {
+		ref := refresher.New(db, cfg.Refresher, cfg.Upstream.BaseURL)
+		go ref.Start(ctx)
+	}
 
 	// Start server
 	active, _ := pool.Stats()
@@ -72,6 +111,7 @@ func main() {
 		"addr", cfg.Server.Addr,
 		"upstream", cfg.Upstream.BaseURL,
 		"active_keys", active,
+		"dashboard", dashboardDir,
 	)
 
 	server := &http.Server{
@@ -85,6 +125,7 @@ func main() {
 		signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 		<-sigCh
 		slog.Info("shutting down...")
+		cancel()
 		server.Close()
 	}()
 
