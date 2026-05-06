@@ -59,6 +59,9 @@ func main() {
 
 	// Init key pool
 	pool := keypool.New(db)
+	if cfg.KeyPool.CircuitBreakerCooldown > 0 {
+		pool.SetCooldown(cfg.KeyPool.CircuitBreakerCooldown)
+	}
 
 	// Init upstream client
 	client := upstream.NewClient(cfg.Upstream.BaseURL, cfg.Upstream.ChatPath, cfg.Upstream.Timeout)

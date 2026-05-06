@@ -11,6 +11,7 @@ upstream:
 keypool:
   cooldown_duration: 60s
   min_active_keys: 5
+  circuit_breaker_cooldown: 10s
 
 database:
   path: "./data/proxy.db"
@@ -27,6 +28,6 @@ logging:
 
 refresher:
   enabled: true
-  interval: 5m
+  interval: 1m
   refresh_buffer: 10m
   max_retries: 3

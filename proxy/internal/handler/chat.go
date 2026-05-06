@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -56,14 +57,29 @@ func (h *ChatHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		slog.Debug("model mapped", "from", req.Model, "to", mapped)
 	}
 
+	// Track which sessions we've already tried to avoid retrying the same one
+	tried := make(map[int]bool)
+
 	var lastErr error
 	for attempt := 1; attempt <= h.maxRetry; attempt++ {
-		sess, err := h.pool.Acquire()
+		// Use AcquireExcluding to skip sessions we already tried
+		sess, err := h.pool.AcquireExcluding(tried)
 		if err != nil {
+			if errors.Is(err, keypool.ErrCircuitOpen) {
+				slog.Error("circuit breaker open, fast-failing", "error", err)
+				w.Header().Set("Content-Type", "application/json")
+				w.Header().Set("Retry-After", "10")
+				w.WriteHeader(http.StatusServiceUnavailable)
+				w.Write([]byte(`{"error":{"message":"all sessions exhausted, retry after 10s","type":"circuit_breaker"}}`))
+				return
+			}
 			slog.Error("no sessions available", "error", err)
 			http.Error(w, `{"error":{"message":"no active sessions available","type":"server_error"}}`, http.StatusServiceUnavailable)
 			return
 		}
+
+		// Mark this session as tried
+		tried[sess.ID] = true
 
 		slog.Info("proxy request", "model", req.Model, "account", sess.Email, "session_id", sess.ID)
 

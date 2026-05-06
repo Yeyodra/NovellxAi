@@ -75,6 +75,19 @@ func (r *Refresher) tick() {
 			continue
 		}
 
+		// Proactive health-check: if session is already expired, mark immediately
+		if now.After(expiresAt) {
+			slog.Warn("refresher: session already expired, marking",
+				"session_id", sess.ID,
+				"expired_since", now.Sub(expiresAt).Round(time.Second),
+			)
+			if markErr := r.store.MarkSessionExpired(sess.ID); markErr != nil {
+				slog.Error("refresher: failed to mark session expired", "session_id", sess.ID, "error", markErr)
+			}
+			delete(r.failures, sess.ID)
+			continue
+		}
+
 		// Refresh if expiry is within the buffer window
 		if time.Until(expiresAt) > r.cfg.RefreshBuffer {
 			continue

@@ -37,8 +37,9 @@ type UpstreamConfig struct {
 }
 
 type KeyPoolConfig struct {
-	CooldownDuration time.Duration `yaml:"cooldown_duration"`
-	MinActiveKeys    int           `yaml:"min_active_keys"`
+	CooldownDuration       time.Duration `yaml:"cooldown_duration"`
+	MinActiveKeys          int           `yaml:"min_active_keys"`
+	CircuitBreakerCooldown time.Duration `yaml:"circuit_breaker_cooldown"`
 }
 
 type DatabaseConfig struct {
@@ -66,8 +67,9 @@ func Load(path string) (*Config, error) {
 			MaxRetries: 3,
 		},
 		KeyPool: KeyPoolConfig{
-			CooldownDuration: 60 * time.Second,
-			MinActiveKeys:    5,
+			CooldownDuration:       60 * time.Second,
+			MinActiveKeys:          5,
+			CircuitBreakerCooldown: 10 * time.Second,
 		},
 		Database: DatabaseConfig{
 			Path: "./data/proxy.db",
