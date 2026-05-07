@@ -44,15 +44,15 @@ interface SidebarProps {
 
 export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
   return (
-    <aside className="w-56 h-screen bg-[#0f1117] border-r border-[#2a2d35] flex flex-col shrink-0">
+    <aside className="w-56 h-screen bg-[#0d0d0d] border-r border-white/[0.08] flex flex-col shrink-0">
       {/* Logo */}
-      <div className="p-5 border-b border-[#2a2d35]">
+      <div className="p-5 border-b border-white/[0.08]">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-xs font-bold text-black">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#16b195] to-[#3e62c0] flex items-center justify-center text-xs font-bold text-white">
             N
           </div>
           <div>
-            <h1 className="text-sm font-semibold text-white leading-none">NovellxAI</h1>
+            <h1 className="text-sm font-semibold text-white leading-none">NovellaxAI</h1>
             <span className="text-[10px] text-gray-500">v0.1.0</span>
           </div>
         </div>
@@ -64,8 +64,8 @@ export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
           onClick={() => onNavigate('dashboard')}
           className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm transition-colors ${
             activePage === 'dashboard'
-              ? 'bg-[#1a1d23] text-white'
-              : 'text-gray-400 hover:text-gray-200 hover:bg-[#1a1d23]/50'
+              ? 'bg-[#121212] text-white'
+              : 'text-gray-400 hover:text-gray-200 hover:bg-[#121212]/50'
           }`}
         >
           <span className="text-xs">📊</span>
@@ -89,8 +89,8 @@ export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
                       onClick={() => item.page && onNavigate(item.page)}
                       className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm transition-colors ${
                         isActive
-                          ? 'bg-[#1a1d23] text-white'
-                          : 'text-gray-400 hover:text-gray-200 hover:bg-[#1a1d23]/50'
+                          ? 'bg-[#121212] text-white'
+                          : 'text-gray-400 hover:text-gray-200 hover:bg-[#121212]/50'
                       }`}
                     >
                       <span className="text-xs">{item.icon}</span>
@@ -105,9 +105,9 @@ export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
       </nav>
 
       {/* Status */}
-      <div className="p-4 border-t border-[#2a2d35]">
+      <div className="p-4 border-t border-white/[0.08]">
         <div className="flex items-center gap-2 text-xs text-gray-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#1c9749] animate-pulse" />
           <span>Proxy running</span>
         </div>
       </div>

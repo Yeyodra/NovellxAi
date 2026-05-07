@@ -54,19 +54,23 @@ function MiniChart() {
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-32 mt-4" preserveAspectRatio="none">
       <defs>
         <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="#14b8a6" stopOpacity="0" />
+          <stop offset="0%" stopColor="#16b195" stopOpacity="0.3" />
+          <stop offset="100%" stopColor="#16b195" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="chartLine" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#16b195" />
+          <stop offset="100%" stopColor="#3e62c0" />
         </linearGradient>
       </defs>
       <path d={`${pathD} L ${w} ${h} L 0 ${h} Z`} fill="url(#chartGrad)" />
-      <path d={pathD} fill="none" stroke="#14b8a6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={pathD} fill="none" stroke="url(#chartLine)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
 
 function StatCard({ label, value, sub, icon }: { label: string; value: string; sub?: string; icon: string }) {
   return (
-    <div className="bg-[#1a1d23] border border-[#2a2d35] rounded-lg p-4 flex flex-col gap-1">
+    <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4 flex flex-col gap-1">
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-medium text-gray-500 uppercase tracking-wide">{label}</span>
         <span className="text-sm">{icon}</span>
@@ -90,14 +94,14 @@ function ProviderCard({ provider }: { provider: ProviderData }) {
   const pct = provider.creditsTotal > 0 ? (provider.creditsUsed / provider.creditsTotal) * 100 : 0
 
   return (
-    <div className="bg-[#1a1d23] border border-[#2a2d35] rounded-lg p-4">
+    <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="text-sm font-semibold text-white">{provider.name}</h3>
           <p className="text-xs text-gray-500">{provider.active}/{provider.total} accounts</p>
         </div>
         {provider.active > 0 && (
-          <span className="text-[10px] font-medium bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full">
+          <span className="text-[10px] font-medium bg-[#1c9749]/15 text-[#1c9749] px-2 py-0.5 rounded-full">
             {provider.active} active
           </span>
         )}
@@ -109,9 +113,9 @@ function ProviderCard({ provider }: { provider: ProviderData }) {
             <span>Credits</span>
             <span>{provider.creditsUsed} / {provider.creditsTotal}</span>
           </div>
-          <div className="w-full h-2 bg-[#2a2d35] rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-white/[0.08] rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-[#16b195] to-[#3e62c0] transition-all"
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -188,7 +192,7 @@ export default function Dashboard() {
       </div>
 
       {/* Token Usage */}
-      <div className="bg-[#1a1d23] border border-[#2a2d35] rounded-lg p-5">
+      <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-white">Token Usage</h2>
           <div className="flex gap-1">
@@ -198,8 +202,8 @@ export default function Dashboard() {
                 onClick={() => setTimeRange(r)}
                 className={`px-2.5 py-1 text-xs rounded-md transition-colors ${
                   timeRange === r
-                    ? 'bg-teal-500/20 text-teal-400'
-                    : 'text-gray-500 hover:text-gray-300 hover:bg-[#2a2d35]'
+                    ? 'bg-[#16b195]/20 text-[#16b195]'
+                    : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.08]'
                 }`}
               >
                 {r}
@@ -215,11 +219,11 @@ export default function Dashboard() {
           </div>
           <div>
             <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Prompt</p>
-            <p className="text-lg font-semibold text-teal-400">{data.token_usage.prompt.toLocaleString()}</p>
+            <p className="text-lg font-semibold text-[#16b195]">{data.token_usage.prompt.toLocaleString()}</p>
           </div>
           <div>
             <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Completion</p>
-            <p className="text-lg font-semibold text-cyan-400">{data.token_usage.completion.toLocaleString()}</p>
+            <p className="text-lg font-semibold text-[#3e62c0]">{data.token_usage.completion.toLocaleString()}</p>
           </div>
         </div>
 
