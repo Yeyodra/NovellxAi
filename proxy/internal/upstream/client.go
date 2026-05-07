@@ -33,8 +33,7 @@ func NewClient(baseURL, chatPath string, timeout time.Duration) *Client {
 	}
 }
 
-// ChatCompletionAPIKey sends request to CodeBuddy using API key auth (X-API-Key header).
-// This is the preferred auth method — no gzip needed, simpler headers.
+// ChatCompletionAPIKey sends request to CodeBuddy using API key auth (Bearer token).
 func (c *Client) ChatCompletionAPIKey(ctx context.Context, apiKey string, body []byte) (*http.Response, error) {
 	url := c.baseURL + c.chatPath
 
@@ -44,10 +43,22 @@ func (c *Client) ChatCompletionAPIKey(ctx context.Context, apiKey string, body [
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-API-Key", apiKey)
-	req.Header.Set("X-IDE-Name", "CLI")
-	req.Header.Set("X-IDE-Type", "CLI")
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("X-Requested-With", "XMLHttpRequest")
+	req.Header.Set("X-Domain", "www.codebuddy.ai")
 	req.Header.Set("X-Product", "SaaS")
+	req.Header.Set("X-IDE-Type", "CLI")
+	req.Header.Set("X-IDE-Name", "CLI")
+	req.Header.Set("X-IDE-Version", "2.95.0")
+	req.Header.Set("X-Conversation-ID", genUUID())
+	req.Header.Set("X-Conversation-Message-ID", genHex(16))
+	req.Header.Set("X-Conversation-Request-ID", "")
+	req.Header.Set("X-Request-ID", genHex(16))
+	req.Header.Set("X-Agent-Intent", "craft")
+	req.Header.Set("X-Agent-Purpose", "conversation")
+	req.Header.Set("x-codebuddy-request", "1")
+	req.Header.Set("User-Agent", "CLI/2.95.0 CodeBuddy/2.95.0")
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -162,7 +173,9 @@ func IsWAFBlocked(statusCode int, body []byte) bool {
 			bytes.Contains(body, []byte("blocked")) ||
 			bytes.Contains(body, []byte("Forbidden"))
 	}
-	return false
+	// CodeBuddy returns 200 with error code 11140 for WAF-like blocks
+	return bytes.Contains(body, []byte("11140")) ||
+		bytes.Contains(body, []byte("not illegal"))
 }
 
 func genUUID() string {

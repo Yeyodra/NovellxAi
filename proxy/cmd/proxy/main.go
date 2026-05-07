@@ -14,6 +14,7 @@ import (
 
 	"github.com/novellaxai/novellaxai/proxy/internal/config"
 	"github.com/novellaxai/novellaxai/proxy/internal/handler"
+	"github.com/novellaxai/novellaxai/proxy/internal/healthcheck"
 	"github.com/novellaxai/novellaxai/proxy/internal/keypool"
 	"github.com/novellaxai/novellaxai/proxy/internal/middleware"
 	"github.com/novellaxai/novellaxai/proxy/internal/refresher"
@@ -112,6 +113,10 @@ func main() {
 		ref := refresher.New(db, cfg.Refresher, cfg.Upstream.BaseURL)
 		go ref.Start(ctx)
 	}
+
+	// Start health checker (validate keys every 5 minutes)
+	hc := healthcheck.New(db, 5*time.Minute)
+	go hc.Start(ctx)
 
 	// Start server
 	active, _ := pool.Stats()

@@ -33,6 +33,11 @@ class Store:
 
     def add_session(self, email: str, jwt_token: str, user_id: str, refresh_token: str = "", api_key: str = ""):
         """Add or update a session. If email exists, update token."""
+        # Guard: if a ck_ API key was accidentally passed as jwt_token, move it to api_key
+        if jwt_token and jwt_token.startswith("ck_"):
+            api_key = jwt_token
+            jwt_token = ""
+
         # Ensure jwt_token has Bearer prefix
         if jwt_token and not jwt_token.startswith("Bearer "):
             jwt_token = f"Bearer {jwt_token}"

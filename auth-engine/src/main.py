@@ -152,6 +152,10 @@ def cmd_refresh(args):
     for s in sessions:
         if s["status"] != "active":
             continue
+        # API-key sessions don't need JWT refresh
+        if s.get("api_key") and not s.get("jwt_token"):
+            log.info(f"Skipping {s['email']} — uses API key (no JWT refresh needed)")
+            continue
         if not s.get("refresh_token"):
             log.info(f"Skipping {s['email']} — no refresh token")
             continue
