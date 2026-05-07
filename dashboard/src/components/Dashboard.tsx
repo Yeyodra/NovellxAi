@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import ProviderDetail from './ProviderDetail'
 
 // Types matching the API response
 interface DashboardData {
@@ -51,7 +52,8 @@ function MiniChart() {
     .join(' ')
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-24 mt-3" preserveAspectRatio="none">
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-24 mt-3" preserveAspectRatio="none" aria-hidden="true">
+      <title>Token usage chart</title>
       <defs>
         <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#16b195" stopOpacity="0.3" />
@@ -102,7 +104,7 @@ interface ProviderData {
   creditsTotal: number
 }
 
-function ProviderCard({ provider }: { provider: ProviderData }) {
+function ProviderCard({ provider, onClick, isSelected }: { provider: ProviderData; onClick?: () => void; isSelected?: boolean }) {
   const pct = provider.creditsTotal > 0 ? (provider.creditsUsed / provider.creditsTotal) * 100 : 0
   const prevCredits = useRef(provider.creditsUsed)
   const [animate, setAnimate] = useState(false)
@@ -117,7 +119,13 @@ function ProviderCard({ provider }: { provider: ProviderData }) {
   }, [provider.creditsUsed])
 
   return (
-    <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+    <button
+      type="button"
+      onClick={onClick}
+      className={`bg-[#1a1a1a] border rounded-lg p-4 cursor-pointer transition-all duration-200 hover:border-[#16b195]/40 hover:shadow-[0_0_12px_rgba(22,177,149,0.08)] text-left w-full ${
+        isSelected ? 'border-[#16b195]/50 shadow-[0_0_16px_rgba(22,177,149,0.12)]' : 'border-white/[0.08]'
+      }`}
+    >
       <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="text-sm font-semibold text-white">{provider.name}</h3>
@@ -151,13 +159,14 @@ function ProviderCard({ provider }: { provider: ProviderData }) {
       ) : (
         <p className="text-xs text-gray-500 italic">No accounts</p>
       )}
-    </div>
+    </button>
   )
 }
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState('7d')
   const [data, setData] = useState<DashboardData>(fallbackData)
+  const [expandedProvider, setExpandedProvider] = useState<string | null>(null)
   const ranges = ['1d', '7d', '30d', 'all']
 
   useEffect(() => {
@@ -213,8 +222,27 @@ export default function Dashboard() {
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Providers</h2>
         <div className="grid grid-cols-2 gap-3">
           {providersList.map((p) => (
-            <ProviderCard key={p.name} provider={p} />
+            <ProviderCard
+              key={p.name}
+              provider={p}
+              isSelected={expandedProvider === p.name}
+              onClick={() => setExpandedProvider(expandedProvider === p.name ? null : p.name)}
+            />
           ))}
+        </div>
+
+        {/* Expandable Provider Detail Panel */}
+        <div
+          className={`transition-all duration-300 ease-in-out overflow-hidden ${
+            expandedProvider ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'
+          }`}
+        >
+          {expandedProvider && (
+            <ProviderDetail
+              providerName={expandedProvider}
+              onClose={() => setExpandedProvider(null)}
+            />
+          )}
         </div>
       </div>
 
@@ -225,6 +253,7 @@ export default function Dashboard() {
           <div className="flex gap-1">
             {ranges.map((r) => (
               <button
+                type="button"
                 key={r}
                 onClick={() => setTimeRange(r)}
                 className={`px-2.5 py-1 text-xs rounded-md transition-colors ${
