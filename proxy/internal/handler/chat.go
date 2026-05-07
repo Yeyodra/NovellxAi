@@ -168,15 +168,29 @@ func (h *ChatHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, fmt.Sprintf(`{"error":{"message":"all retries exhausted: %v","type":"server_error"}}`, lastErr), http.StatusServiceUnavailable)
 }
 
-func (h *ChatHandler) relayStream(w http.ResponseWriter, resp *http.Response) {
+func (h *ChatHandler) relayStream(w http.ResponseWriter, resp *http.Response, sessionID int) {
 	defer resp.Body.Close()
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("X-Accel-Buffering", "no")
 	w.WriteHeader(resp.StatusCode)
-	if err := upstream.RelaySSE(w, resp.Body); err != nil {
+
+	// Wrap writer with usage capture (keeps last 2KB to extract usage from tail)
+	capture := usage.NewCapture(w, 2048)
+	if err := upstream.RelaySSE(capture, resp.Body); err != nil {
 		slog.Error("sse relay error", "error", err)
+	}
+
+	// Extract usage from captured tail and update session credits
+	u, credits := capture.ExtractUsage()
+	if credits > 0 {
+		slog.Info("usage captured", "session_id", sessionID,
+			"prompt_tokens", u.PromptTokens, "completion_tokens", u.CompletionTokens,
+			"total_tokens", u.TotalTokens, "credits", credits)
+		if err := h.store.AddSessionCredits(sessionID, credits); err != nil {
+			slog.Error("failed to update session credits", "session_id", sessionID, "error", err)
+		}
 	}
 }
 

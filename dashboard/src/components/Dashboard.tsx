@@ -69,6 +69,13 @@ function MiniChart() {
   )
 }
 
+const statIcons: Record<string, string> = {
+  accounts: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  requests: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+  success: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>`,
+  uptime: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+}
+
 function StatCard({ label, value, sub, icon }: { label: string; value: string; sub?: string; icon: string }) {
   const prevValue = useRef(value)
   const [animate, setAnimate] = useState(false)
@@ -86,7 +93,7 @@ function StatCard({ label, value, sub, icon }: { label: string; value: string; s
     <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4 flex flex-col gap-1">
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-medium text-gray-500 uppercase tracking-wide">{label}</span>
-        <span className="text-sm">{icon}</span>
+        <span className="w-4 h-4 text-gray-500" dangerouslySetInnerHTML={{ __html: statIcons[icon] || '' }} />
       </div>
       <p className={`text-xl font-semibold text-white transition-all duration-300 ${animate ? 'value-updated' : ''}`}>{value}</p>
       {sub && <p className={`text-xs text-gray-500 transition-opacity duration-300 ${animate ? 'opacity-70' : 'opacity-100'}`}>{sub}</p>}
@@ -197,16 +204,16 @@ export default function Dashboard() {
           label="Accounts"
           value={`${data.accounts.active}/${data.accounts.total}`}
           sub="active / total"
-          icon="👥"
+          icon="accounts"
         />
-        <StatCard label="Requests" value={String(data.requests.total)} icon="⚡" />
+        <StatCard label="Requests" value={String(data.requests.total)} icon="requests" />
         <StatCard
           label="Success Rate"
           value={`${data.success_rate}%`}
           sub={`${data.requests.success} ok / ${data.requests.failed} fail`}
-          icon="📈"
+          icon="success"
         />
-        <StatCard label="Uptime" value={formatUptime(data.uptime_seconds)} icon="🕐" />
+        <StatCard label="Uptime" value={formatUptime(data.uptime_seconds)} icon="uptime" />
       </div>
 
       {/* Providers */}

@@ -2,25 +2,35 @@ package usage
 
 import (
 	"encoding/json"
-	"io"
+	"net/http"
 	"strings"
 )
 
-// Capture wraps an io.Writer and captures the tail of the stream
+// Capture wraps an http.ResponseWriter and captures the tail of the stream
 // to extract usage data from SSE responses without blocking relay.
 type Capture struct {
-	w    io.Writer
+	w    http.ResponseWriter
 	tail []byte
 	max  int
 }
 
 // NewCapture creates a usage capture writer that keeps the last maxBytes of data.
-func NewCapture(w io.Writer, maxBytes int) *Capture {
+func NewCapture(w http.ResponseWriter, maxBytes int) *Capture {
 	return &Capture{
-		w:   w,
+		w:    w,
 		tail: make([]byte, 0, maxBytes),
 		max:  maxBytes,
 	}
+}
+
+// Header delegates to the underlying ResponseWriter.
+func (c *Capture) Header() http.Header {
+	return c.w.Header()
+}
+
+// WriteHeader delegates to the underlying ResponseWriter.
+func (c *Capture) WriteHeader(statusCode int) {
+	c.w.WriteHeader(statusCode)
 }
 
 func (c *Capture) Write(p []byte) (int, error) {
@@ -30,6 +40,13 @@ func (c *Capture) Write(p []byte) (int, error) {
 		c.tail = c.tail[len(c.tail)-c.max:]
 	}
 	return c.w.Write(p)
+}
+
+// Flush delegates to the underlying ResponseWriter if it supports flushing.
+func (c *Capture) Flush() {
+	if f, ok := c.w.(http.Flusher); ok {
+		f.Flush()
+	}
 }
 
 // Usage holds extracted token usage from SSE stream.

@@ -76,12 +76,16 @@ func (h *SessionsHandler) handleList(w http.ResponseWriter, _ *http.Request) {
 	sessions := h.store.GetAllSessions()
 	items := make([]sessionListItem, 0, len(sessions))
 	for _, s := range sessions {
+		credits := 250 - int(s.TotalCreditsUsed)
+		if credits < 0 {
+			credits = 0
+		}
 		items = append(items, sessionListItem{
 			ID:        s.ID,
 			Email:     s.Email,
 			Status:    s.Status,
 			HasApiKey: s.ApiKey != "",
-			Credits:   s.RemainingQuota,
+			Credits:   credits,
 			CreatedAt: s.CreatedAt,
 		})
 	}
