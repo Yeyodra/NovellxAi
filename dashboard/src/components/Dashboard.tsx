@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 // Types matching the API response
 interface DashboardData {
@@ -69,14 +69,26 @@ function MiniChart() {
 }
 
 function StatCard({ label, value, sub, icon }: { label: string; value: string; sub?: string; icon: string }) {
+  const prevValue = useRef(value)
+  const [animate, setAnimate] = useState(false)
+
+  useEffect(() => {
+    if (prevValue.current !== value) {
+      setAnimate(true)
+      prevValue.current = value
+      const t = setTimeout(() => setAnimate(false), 400)
+      return () => clearTimeout(t)
+    }
+  }, [value])
+
   return (
     <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4 flex flex-col gap-1">
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-medium text-gray-500 uppercase tracking-wide">{label}</span>
         <span className="text-sm">{icon}</span>
       </div>
-      <p className="text-xl font-semibold text-white">{value}</p>
-      {sub && <p className="text-xs text-gray-500">{sub}</p>}
+      <p className={`text-xl font-semibold text-white transition-all duration-300 ${animate ? 'value-updated' : ''}`}>{value}</p>
+      {sub && <p className={`text-xs text-gray-500 transition-opacity duration-300 ${animate ? 'opacity-70' : 'opacity-100'}`}>{sub}</p>}
     </div>
   )
 }
@@ -92,6 +104,17 @@ interface ProviderData {
 
 function ProviderCard({ provider }: { provider: ProviderData }) {
   const pct = provider.creditsTotal > 0 ? (provider.creditsUsed / provider.creditsTotal) * 100 : 0
+  const prevCredits = useRef(provider.creditsUsed)
+  const [animate, setAnimate] = useState(false)
+
+  useEffect(() => {
+    if (prevCredits.current !== provider.creditsUsed) {
+      setAnimate(true)
+      prevCredits.current = provider.creditsUsed
+      const t = setTimeout(() => setAnimate(false), 400)
+      return () => clearTimeout(t)
+    }
+  }, [provider.creditsUsed])
 
   return (
     <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
@@ -111,15 +134,19 @@ function ProviderCard({ provider }: { provider: ProviderData }) {
         <div>
           <div className="flex justify-between text-xs text-gray-400 mb-1.5">
             <span>Credits</span>
-            <span>{provider.creditsUsed} / {provider.creditsTotal}</span>
+            <span className={`transition-all duration-300 ${animate ? 'value-updated text-[#16b195]' : ''}`}>
+              {provider.creditsUsed} / {provider.creditsTotal}
+            </span>
           </div>
           <div className="w-full h-2 bg-white/[0.08] rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#16b195] to-[#3e62c0] transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-[#16b195] to-[#3e62c0] progress-fill"
               style={{ width: `${pct}%` }}
             />
           </div>
-          <p className="text-[11px] text-gray-500 mt-1.5">{pct.toFixed(1)}% used</p>
+          <p className={`text-[11px] text-gray-500 mt-1.5 transition-all duration-300 ${animate ? 'value-updated' : ''}`}>
+            {pct.toFixed(1)}% used
+          </p>
         </div>
       ) : (
         <p className="text-xs text-gray-500 italic">No accounts</p>
