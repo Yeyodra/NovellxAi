@@ -11,28 +11,41 @@ interface NavSection {
   items: NavItem[]
 }
 
+// Inline SVG icons (Lucide-style, 16x16)
+const icons = {
+  dashboard: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`,
+  accounts: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  models: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
+  key: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`,
+  proxy: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>`,
+  filters: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="2" x2="6" y1="14" y2="14"/><line x1="10" x2="14" y1="8" y2="8"/><line x1="18" x2="22" y1="16" y2="16"/></svg>`,
+  login: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>`,
+  requests: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
+  usage: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>`,
+}
+
 const navSections: NavSection[] = [
   {
     title: 'ACCOUNTS',
     items: [
-      { label: 'Accounts', icon: '👤', page: 'accounts' },
-      { label: 'Models', icon: '🧠' },
+      { label: 'Accounts', icon: 'accounts', page: 'accounts' },
+      { label: 'Models', icon: 'models' },
     ],
   },
   {
     title: 'PROXY',
     items: [
-      { label: 'API Key', icon: '🔑' },
-      { label: 'Proxy', icon: '🔄' },
-      { label: 'Filters', icon: '⚙️' },
+      { label: 'API Key', icon: 'key' },
+      { label: 'Proxy', icon: 'proxy' },
+      { label: 'Filters', icon: 'filters' },
     ],
   },
   {
     title: 'LOGS & ANALYTICS',
     items: [
-      { label: 'Login', icon: '🔐', page: 'login' },
-      { label: 'Requests', icon: '📋' },
-      { label: 'Usage', icon: '📊' },
+      { label: 'Login', icon: 'login', page: 'login' },
+      { label: 'Requests', icon: 'requests' },
+      { label: 'Usage', icon: 'usage' },
     ],
   },
 ]
@@ -68,7 +81,7 @@ export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
               : 'text-gray-400 hover:text-gray-200 hover:bg-[#121212]/50'
           }`}
         >
-          <span className="text-xs">📊</span>
+          <span className="w-4 h-4 opacity-70" dangerouslySetInnerHTML={{ __html: icons.dashboard }} />
           <span>Dashboard</span>
         </button>
       </div>
@@ -93,7 +106,7 @@ export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
                           : 'text-gray-400 hover:text-gray-200 hover:bg-[#121212]/50'
                       }`}
                     >
-                      <span className="text-xs">{item.icon}</span>
+                      <span className="w-4 h-4 opacity-70" dangerouslySetInnerHTML={{ __html: icons[item.icon as keyof typeof icons] || '' }} />
                       <span>{item.label}</span>
                     </button>
                   </li>

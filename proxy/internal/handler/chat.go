@@ -13,6 +13,7 @@ import (
 	"github.com/novellaxai/novellaxai/proxy/internal/keypool"
 	"github.com/novellaxai/novellaxai/proxy/internal/store"
 	"github.com/novellaxai/novellaxai/proxy/internal/upstream"
+	"github.com/novellaxai/novellaxai/proxy/internal/usage"
 )
 
 type ChatHandler struct {
@@ -159,7 +160,7 @@ func (h *ChatHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.pool.Release(sess, resp.StatusCode, "")
 
 		// Always stream — CodeBuddy API key mode only supports streaming
-		h.relayStream(w, resp)
+		h.relayStream(w, resp, sess.ID)
 		return
 	}
 

@@ -22,19 +22,20 @@ type Data struct {
 }
 
 type Session struct {
-	ID             int    `json:"id"`
-	Email          string `json:"email"`
-	AccountID      string `json:"account_id"`
-	JWTToken       string `json:"jwt_token"`       // Bearer token (JWT from Keycloak)
-	ApiKey         string `json:"api_key"`          // CodeBuddy API key (ck_...) — preferred auth
-	UserID         string `json:"user_id"`          // X-User-Id header
-	RefreshToken   string `json:"refresh_token"`    // For token refresh
-	Status         string `json:"status"`           // active|exhausted|expired|banned
-	IsCurrent      bool   `json:"is_current"`
-	RemainingQuota int    `json:"remaining_quota"`
-	LastUsedAt     string `json:"last_used_at"`
-	ExpiresAt      string `json:"expires_at"`
-	CreatedAt      string `json:"created_at"`
+	ID               int     `json:"id"`
+	Email            string  `json:"email"`
+	AccountID        string  `json:"account_id"`
+	JWTToken         string  `json:"jwt_token"`         // Bearer token (JWT from Keycloak)
+	ApiKey           string  `json:"api_key"`            // CodeBuddy API key (ck_...) — preferred auth
+	UserID           string  `json:"user_id"`            // X-User-Id header
+	RefreshToken     string  `json:"refresh_token"`      // For token refresh
+	Status           string  `json:"status"`             // active|exhausted|expired|banned
+	IsCurrent        bool    `json:"is_current"`
+	RemainingQuota   int     `json:"remaining_quota"`
+	TotalCreditsUsed float64 `json:"total_credits_used"` // accumulated credits spent
+	LastUsedAt       string  `json:"last_used_at"`
+	ExpiresAt        string  `json:"expires_at"`
+	CreatedAt        string  `json:"created_at"`
 }
 
 type Account struct {
@@ -194,6 +195,26 @@ func (s *Store) TouchSession(sessionID int) error {
 		}
 	}
 	return s.save()
+}
+
+func (s *Store) AddSessionCredits(sessionID int, credits float64) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for i := range s.data.Sessions {
+		if s.data.Sessions[i].ID == sessionID {
+			s.data.Sessions[i].TotalCreditsUsed += credits
+			s.data.Sessions[i].RemainingQuota = maxInt(0, 250-int(s.data.Sessions[i].TotalCreditsUsed))
+			return s.save()
+		}
+	}
+	return nil
+}
+
+func maxInt(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
 
 func (s *Store) CountActiveSessions() (int, error) {
