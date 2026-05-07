@@ -51,7 +51,7 @@ function MiniChart() {
     .join(' ')
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-32 mt-4" preserveAspectRatio="none">
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-24 mt-3" preserveAspectRatio="none">
       <defs>
         <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#16b195" stopOpacity="0.3" />
@@ -162,9 +162,9 @@ export default function Dashboard() {
   }))
 
   return (
-    <div className="max-w-5xl space-y-6">
+    <div className="w-full space-y-4">
       {/* Stats Row */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-3">
         <StatCard
           label="Accounts"
           value={`${data.accounts.active}/${data.accounts.total}`}
@@ -183,8 +183,8 @@ export default function Dashboard() {
 
       {/* Providers */}
       <div>
-        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Providers</h2>
-        <div className="grid grid-cols-2 gap-4">
+        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Providers</h2>
+        <div className="grid grid-cols-2 gap-3">
           {providersList.map((p) => (
             <ProviderCard key={p.name} provider={p} />
           ))}
@@ -192,8 +192,8 @@ export default function Dashboard() {
       </div>
 
       {/* Token Usage */}
-      <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-5">
-        <div className="flex items-center justify-between mb-4">
+      <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+        <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-semibold text-white">Token Usage</h2>
           <div className="flex gap-1">
             {ranges.map((r) => (
