@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hanni/aiproxy/proxy/internal/keypool"
-	"github.com/hanni/aiproxy/proxy/internal/store"
-	"github.com/hanni/aiproxy/proxy/internal/upstream"
+	"github.com/novellaxai/novellaxai/proxy/internal/keypool"
+	"github.com/novellaxai/novellaxai/proxy/internal/store"
+	"github.com/novellaxai/novellaxai/proxy/internal/upstream"
 )
 
 type ChatHandler struct {

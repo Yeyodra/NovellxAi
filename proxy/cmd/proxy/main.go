@@ -12,13 +12,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/hanni/aiproxy/proxy/internal/config"
-	"github.com/hanni/aiproxy/proxy/internal/handler"
-	"github.com/hanni/aiproxy/proxy/internal/keypool"
-	"github.com/hanni/aiproxy/proxy/internal/middleware"
-	"github.com/hanni/aiproxy/proxy/internal/refresher"
-	"github.com/hanni/aiproxy/proxy/internal/store"
-	"github.com/hanni/aiproxy/proxy/internal/upstream"
+	"github.com/novellaxai/novellaxai/proxy/internal/config"
+	"github.com/novellaxai/novellaxai/proxy/internal/handler"
+	"github.com/novellaxai/novellaxai/proxy/internal/keypool"
+	"github.com/novellaxai/novellaxai/proxy/internal/middleware"
+	"github.com/novellaxai/novellaxai/proxy/internal/refresher"
+	"github.com/novellaxai/novellaxai/proxy/internal/store"
+	"github.com/novellaxai/novellaxai/proxy/internal/upstream"
 )
 
 func main() {
@@ -115,7 +115,7 @@ func main() {
 
 	// Start server
 	active, _ := pool.Stats()
-	slog.Info("aiproxy started",
+	slog.Info("NovellaxAI started",
 		"addr", cfg.Server.Addr,
 		"upstream", cfg.Upstream.BaseURL,
 		"active_keys", active,

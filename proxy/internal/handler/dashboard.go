@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hanni/aiproxy/proxy/internal/keypool"
-	"github.com/hanni/aiproxy/proxy/internal/store"
+	"github.com/novellaxai/novellaxai/proxy/internal/keypool"
+	"github.com/novellaxai/novellaxai/proxy/internal/store"
 )
 
 type DashboardHandler struct {

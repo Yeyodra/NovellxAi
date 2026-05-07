@@ -1,0 +1,87 @@
+{
+  "email": "akuncursorke8@gmail.com",
+  "saved_at": 1778145546.4230278,
+  "expires_at": 1778149146.4230278,
+  "cookies": [
+    {
+      "name": "qcloud_visitId",
+      "value": "734e4cb32fc498c8ecda679a2108ee57",
+      "domain": ".codebuddy.ai",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "qcloud_from",
+      "value": "intl.directEnter.www.codebuddy.ai-1778145530769",
+      "domain": ".codebuddy.ai",
+      "path": "/",
+      "expires": 1780737530,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "sajssdk_2015_cross_new_user",
+      "value": "1",
+      "domain": ".codebuddy.ai",
+      "path": "/",
+      "expires": 1778173199,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "_TDID_CK",
+      "value": "1778145531429",
+      "domain": "www.codebuddy.ai",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "397f1c3795037d16",
+      "value": "C9LgeAkf1yHs2Ur97uI84TI6BEu3MsKOPoCW9ivNf3z54G7urwfpEfSaF4Nfgbr1L58WAJGD%2BKf%2BRsctc%2FbjoBTiMIN83t%2FQeQHvTFf1sKikCKPuI3yNwhaHq152cukdDSUDd6oSA9e5xxLvvUkKNDznVnXC%2Bq7XJUrY%2B%2BBXQ7KAPNo%2FwgmYPvDCWokNU0o5",
+      "domain": "www.codebuddy.ai",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "sensorsdata2015jssdkcross",
+      "value": "%7B%22distinct_id%22%3A%2219e01bb93971de-01bb4fdaeab826c-f505725-1440000-19e01bb93986db%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTllMDFiYjkzOTcxZGUtMDFiYjRmZGFlYWI4MjZjLWY1MDU3MjUtMTQ0MDAwMC0xOWUwMWJiOTM5ODZkYiJ9%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%7D",
+      "domain": ".codebuddy.ai",
+      "path": "/",
+      "expires": 1809249544,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "session",
+      "value": "TV7Spif7aF0CGoiJJRl4Tg|1778149145|gyRhQkXIAJP8-ZvwFdVPOFTbjbChgTldQF57yfiQ-m0EVD-yXoAM0y4XTx9ObW6GB5ODkZGth5mwgP8Xmz3W2SAoaNjATz8b-miwrNQovLIjxgYLZoIU9qeNveDA_picIQOFYAwNOOWNSVA-h4va7VKlZfOQ8eUQ7HapDUFIxz7HAnc-H2MeIgenYv6f6xXfn7GmPSu8aMo4T9JXT32udEaY5EZ8_ZMCae2_uJTQP7Fa3DzkGCG62JYluXDNSOHvvovtbIwGSEwApndpEL2Evc5tLypQ4Gt2YtPmuMvM6grp7nJc4atIysaKkzQ_1_RYCUHs272_MUM5gFQyzJqcMgLUYML0PK9E6GJwOQSEDjSh1HFcFpWi8GGClqRuwQJ7GPKZLG1FLTCm1cVvs13sNv6iB8Mc7iqIJBaerlb2Iwm4vZaHal6RDFMVXRe9YxLQTBPgtkA_DE3F0iBV1g5gYV3Ihaj6qgUaM2t0biZlpJYVtDh9gVjXullqlQZeooBs6tU05tGqZLw3ZsO6Rv1rUdff-Ms3dhV4FEtwNL76NjIdW4QNwgM67eFtnim6F-ObnEP2AKUyA9MXhJPF--SVTxImzrYNwTb8vz1d0CFATLHxKcs5ruKbtyhuIlczWNjUGtcalLIiASbpNJkGBVGvkvIlAkH9u85kXUPbyzUDvDf4ItyfTXu44kTS0RerSiviA6y3M97p2xnwxXJHXQQQXNs20XuI0z-oh9HbzGKXFrayhvrSB6ASaHfV-_qcXZtw7VuSMgDn-iEBcAp7Ob6-jh0DtDBkFYiupL5aPBj8fc1mBDyWhRdvC_4Qla8BrAho1imogowJRbRO58lXYkXO_hh7oyt6kJKUCwU0ouvc6s4fR0AJHVnV2IhyxS5XbTkP41Q4q4PEuwEp2Fl83rqtKFSLLZpqaosmlepvIjC0tv3kEJtelL17w-26gYR8dqJ_bu5CG4ZEOzGdayk2M3Nv-HstCpWrTH-xVf6hPDCVQ3WMU8jXRuRYsureXGd7Naxn8JTy2Mz4e9VrHWuHIK8P6AJZozNBuFk5UdKhxEYNOPCjlQIfp-RmsXYW6gDpkqQaGfyCQ88pLOh639ycrP6jqELUUZ3gQ0JxN45zFmhaVY2cLAMWCyu1Sg1afTCnP8PkEjdwg9nLSQh847wUvtNFa1gOtmsIENVkSwlYyljhJCLYCMhmUEucafJIo_e4iZAzyGErItDP8q3HGmfgkIcONcwcHrIHf9vSwfTR-VceeHiCMbnKIUMz47skeE1ua2dOL5ETDkOAmbqaNR3jvwiYXtU9lSGaxoqjAFBRzYdJ94zpx91-Y56Jo6QVaDBWMD9WBOg72dPY4MRckn86D6roNZhVMTiIp1NiR6rsYUtx_Nfg2Tbqm77X_QFJTxxuuTJcvlavv3IBU2gpMLHy1MUjIw4Vh5y0n5mDoWMTGBanKvlX0dGv9b1KFttWK0XkWHdVig4JAmfy5T0QiuHSBv_QTCM-QJV5lMHFRp_vEigKKe4nK6sISWSXRePREZl4Zr4_iQgbWrbknHf_adN5Qjq0_gzQ7GJeHzbSC6pfr00dAhXf0eewYeJK6yPyhsPidrxd-tPenpTG8dtoZ8nsGjkM6ntYFmuDniFqYR8xzYXyCFFp7KgUQznmEV0m5I9d7gR6oes8IRevAc3hVbZJIv_S0lfQci5JEwwxtRWWaYzCqmu2hm-hylKOBEiNpKx9bGFTgnbgYxxUcwHmPJ78kTmkNlrYp214D0tz08OXniLpfA0QqESPXFFcPi8jVgxJnh53G1vB9UuGESY4UJrQPzRqn83NO3vg3RNqd30oHLKf56CC1wHAS1FnhzpdUh4XbRM_hFPdRjvgczJe3EbiY1A_NL0bZJNR_1SrIi8LcsU6pe2ryxrXYV_Z8epzxIAn2tnKkGUhe2xIhfkuehwEHSP31F1bvSlfjwo7-olOOr06ifS_xhfscEHsJBYWR-PY00GlxRt_U6FLghnVkPQDaz7VqP2aZ84OHZ-zqkJp_iQ12Ttb27cQGP72_H_065Z5VE-gPMQJEQOFbnU8uguNcHlSDJu4ijhct44T1VKpSmO2PAbcw6wAe5cgXRjzGlGvhQ8wtCPpMrgofiRR_2Fkts0x0SU17u1rZcoEhNeOrPpk5o1fEYjrC_iUsRanabTLUdUmQ7BGaknblLxgqiABntQE5PxJP4214rANABHZL8t2Bl1RdwDClnNEtDTMMiJAkNGHiMSc4l13j8ysXmjuDMW1_XnUrrpxmH7yYa0sgFih7GhEzovAeNz5log9P2KIQs3Xut9uGf-LnlC5kNi67eSko9nEmBlejPQpeEOQMaRzNSJ50-WqpSKNpY1Pc9Ajz7giFDj_oz-RtQiSotIUXg4JSQrbOqhM43iiiQbamrJpm8u6LGbgAGchV7g0sujUCQJ4lDlSrZoTyDeUyEhA0FTg7wP6aVNGOcCu8tPINi9yY8BLYQtKH9wL4hNgaKlNLZ9SFZKJxCImMKDQsP6VNDxySzRo0oTE_IF6oknSuhzOtxEge5AtDKww_0jg8H6l7b0NHnCjJ7KH5FRNlsiwmrrwFjp9JnLSpJvq-JmpsUofltkqWzvP4vl0Ko_h_Z_nPUdCly1wq1GXW8w54BvlTjnvSfybwPYQDDAOlkfowzXK_c9FRDy-5R4Hgq9f2I2lnCNypb2OWmVvb5ORRnYKHCh2h9j7DuEKS-hGxmMH74Xh0Xf2wzW4zbhcWZyBwaHKTdbd0kc6DkUCwOnu5EMhcy73pcSyLRrjywWcuHBDo8P5KYae3fNkN7cJMwgU2oWb9OpCz1ybW9pidIOxYEjZut6me1pFMsEKVhnd-C22mCvwS-3VqbfDaAzG-IFGiWk48cbwItgiZvoK_IFn8j6OACrlIgT4sIeYLGmEMQ3CU76tQBp1IW-EUvDRfaZTrcRGU1PYXPJBsY1QXaD6wxkzNZgusBH8UR0NmUIiPT6sxdN7OLyPBY5dWNElrJXRvIkDoUKA6AHhuapPzyQ_01LLrhH7PaTRjd7OIO5xuFdSlG80jOqTdeK_l5Geytsu2c2cEV6rVorUq5ZozozxJJ7oTm-Z-CLQ5IxMeIc_i8x4H9iDV8Y6FplMz6Nc04LzLzvsFH_w5eN02dAiAlu7CVyerVVr3DttmqsLRgi4zDRAygk23C6eNbWjKfAKPsFYQJWiOpZMQ5BRHMBKBDoJpA7Nuk8iw4B8Fu42PfWCbrUNz_4ujtdPbwlBd6Q3aXHmI_p1Tp3ocUyFQC9wl-R1Lrao1SOVkdqHet_jwuO5lRVWxOVAp8DhY4e_tdkfDNnppTW1IenOzjdvsvVyCIOEduJPCX4jcjaXZOzx_oGQXRi5piSZzW2DMDE0hnQfWLHezSO_6crQG3fNOqCJvWBKUE-F6eh855HKTLUgc0xEy81rsigs4F69ssRPTQSRZZXt6syfFWCp9Mjd-6udmDZ46iHGiVLw2zyY0BWAMy0aZIP94EEbmw9WCziCIaIX4CWZm_UDqUu793buuW6SDnnchLMZVT1MND5YvPEXOj2VlvE4G-YrbEBXwwg0o2lEmt5KNnhHBLzT9IgWiE81qXMCaAYqdjx4mHGL-xKp-5jcx-HwBCDd7wXeolAxtic6QgfgL798QxKCn7iKJ8T_W_38PFNqCBUReLgTw2vHuWdcwOwBwtavkx4DfWWilrV90t2mqWruxTbYj5zzy5e7SpFf8FLfEcYZsM6ucVRl8GQCfUAc-f4ldMx4ywSWjVw1Zdfq2e7J6Y4QH3n_l3Ov5JDOI4se0Ja426dX7y63GCBTRzkntCSgtI2cOugb6wzzIqqhiM1LOHfDbt-0aC8SZDB9U8tWlHj0wyOX5GbVF_LgYAZk_71Ce8YN4WYjMJ_Pw227jNDWd-EVjT40YeenjdqxAmK0yso8ppdYIlhdDFkn7WARzrcPuSd9xabpAMo-hS_VZycciX0",
+      "domain": "www.codebuddy.ai",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "session_2",
+      "value": "tpCGkvGX3HqPz-w49gO_9X1MVImAsy7_MoZYDam5Iq98XNsRz_8XvoxmvoHG-dOFzVUv-qIjc_AYZ7lPj2HNUpxuSChwNNmWzHUuxth-wDp8Tju5wCNJR5LavLnJBh3Pv8Z5UXSw0upEYV4nfywRCjY0JIMKfUJ5aPFhna9rfccb7gPu9jiNMHUblpZDO3zkCuZMj26y7TAi6ZsWnBpBqKq6QdyoWRDxl7uudzFlN32iqwrvra96BJhUutcZslFxt85Fhrs6MH7C7RJQbNT5oqhiRFlAfm2_t4q-oBVBFAm6Z69yaKxY07BbpNkxYVjCxfYR9K-Q4d-IflsxUdYgyiOgxkoI5XtaGtEP-cCcIRzn-UDtJZvOBPb-XkqCCdEfhmhCGeXaghQfxXKMRTCSsZduSoRvX6dJTGsS3COebT6KexTo9MjwNBz2jfsP2bJN9KgMLj4it_sX0_iA7UftlC7dSfLkVlvJhKvN-ouJpuXL7CFWvtlm3ZbrCMQr3UabpfyGk8_1gI684GBbERPwAJUoXXIigv6MMENdafWV8suwqw718-HtvtJ3_o-yzYIN0ZaxDtGANop4Xm7M7fgkWB0Prr0TgfW2WoEcGw0rj-vZEkLMogknr1zRGnD9_vTtebbpghQEECUURelT_AqlFUx40_dBshrDbCRDfcvtewITDmNnjpa07_7m9dkPkrHlEwLtw0__exS21VEp_O8TmMRmqbivoQL3e9dA00N5NHW11t4vMLyOvJBgQ8nLZydQ_Gt1zC7gvp6faskCpYxUmd0dcR2saC6F_lxg_qsfbGOvPpEfufHn7RtJHH9ognjQQD-rcRi9Oso22GQJGE8LvIsygB_9ahu5lI1ZEnDTpPWqAqEqA8wpp8fF5IQlacd8o-y_Dbs2q5kB3gz05ZukO0E5cSOScqmaJGLRts9rnCppHvP7tEwy2gMu3Kt3mA8X2bIOYlffr1G3MfcM987MXTB3usLVgfw0LJNoBoSk5nwm3CIfLGADr_XWQk4X8_L2PXB8E25QMRqIEPbzuxvXMaDuvDLkz8rLpcwtcpFl6Fk-f15WfENjd0AFMUAHQ_PMleSP5CFt91vQ8MGyTz9oMsM3W5KAr7E-VsRGOasP_MNDwIozCx86hT8tL2aeRb4ssE-2TG8hnQiLiQE-eOaxop4zYwKrC4ZvSI6tgDCgWEb2GEhXMat-PBcqgbYUHUAroknHot2380W9nqGgYRZ5C2d5W0KS9hrdVlAdplGmad2fh3yXm4uvSRcZx8gNlFAw52r7wLpGQixodQfu0EFn9rS68zeghEKtUuJJqL18dCBjMseGFUcc-F8pSCAA8bBWj52olZCse4HHpc4wLoVg3MZ71HFiGrPMNUXsyOyQi8_aG9MBkBDmFqPGOp3WBvXQ1e86PMkQT0iyDtZvc2CwYl6j84L3fjbRt0z-9wrwKkLfJhSQpi1WhvB2Z7gk-_81zkdS82pmwodWc2gqmXhkRkxXTaJVWRA51wOsswkUq5ToxshFInX2LbBBGBnc-CrMfH6Jg3BbUUz1Cx-Li6k3FxrKvJNkN6TeEvKkOcS9o6_-A|yicg1o9aDmtKdtr7clm2ST9EF9w",
+      "domain": "www.codebuddy.ai",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ]
+}

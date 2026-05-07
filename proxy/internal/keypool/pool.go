@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hanni/aiproxy/proxy/internal/store"
+	"github.com/novellaxai/novellaxai/proxy/internal/store"
 )
 
 // ErrCircuitOpen is returned when the circuit breaker is open (all sessions dead).

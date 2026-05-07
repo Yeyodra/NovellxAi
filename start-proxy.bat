@@ -1,12 +1,12 @@
 @echo off
-title AI Proxy (CodeBuddy)
+title NovellaxAI (CodeBuddy)
 echo ========================================
-echo   AI Proxy - CodeBuddy Gateway
+echo   NovellaxAI - CodeBuddy Gateway
 echo   Port: 8090
 echo ========================================
 echo.
 
-cd /d "C:\Users\Hanni\Documents\Projek\Github\aiproxy\proxy"
+cd /d "%~dp0proxy"
 
 :: Kill existing instance if running
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":8090.*LISTENING"') do (
@@ -18,5 +18,5 @@ timeout /t 1 /nobreak >nul
 
 echo Starting proxy...
 echo.
-.\aiproxy.exe --config config.yaml
+.\novellaxai.exe --config config.yaml
 pause

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/hanni/aiproxy/proxy/internal/keypool"
+	"github.com/novellaxai/novellaxai/proxy/internal/keypool"
 )
 
 type ModelsHandler struct {

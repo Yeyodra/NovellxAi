@@ -1,4 +1,4 @@
-module github.com/hanni/aiproxy/proxy
+module github.com/novellaxai/novellaxai/proxy
 
 go 1.26.1
 

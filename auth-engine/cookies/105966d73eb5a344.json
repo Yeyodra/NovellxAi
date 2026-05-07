@@ -1,0 +1,87 @@
+{
+  "email": "yeyoanjay18@gmail.com",
+  "saved_at": 1778145314.3563595,
+  "expires_at": 1778148914.3563595,
+  "cookies": [
+    {
+      "name": "qcloud_visitId",
+      "value": "751544c4dbce0b82be346d10ad6e1bd6",
+      "domain": ".codebuddy.ai",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "qcloud_from",
+      "value": "intl.directEnter.www.codebuddy.ai-1778145293300",
+      "domain": ".codebuddy.ai",
+      "path": "/",
+      "expires": 1780737293,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "sajssdk_2015_cross_new_user",
+      "value": "1",
+      "domain": ".codebuddy.ai",
+      "path": "/",
+      "expires": 1778173199,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "_TDID_CK",
+      "value": "1778145294563",
+      "domain": "www.codebuddy.ai",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "397f1c3795037d16",
+      "value": "CHoNywVBY3EQ7RQmHoeRxErstBOB%2FiUXDePdnx3OImSvUhVDuWTEi2%2F%2B5YsjIoDgf7K9QMhcCwGuyQ9MGjOeIMELN2vmbl9SreM4dGk0jcwMXfYwN9PzSe0bs1lnToN62RPaOX1wQn%2BvbUhYjnSInqRC1j80HJN7z4F0BplPPXZxIRvkvqPfKlwbCq%2Bf%2BExy",
+      "domain": "www.codebuddy.ai",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "sensorsdata2015jssdkcross",
+      "value": "%7B%22distinct_id%22%3A%2219e01b7f3fc484-02161f9add3c0ca-f505725-1764000-19e01b7f3fd6b6%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTllMDFiN2YzZmM0ODQtMDIxNjFmOWFkZDNjMGNhLWY1MDU3MjUtMTc2NDAwMC0xOWUwMWI3ZjNmZDZiNiJ9%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%7D",
+      "domain": ".codebuddy.ai",
+      "path": "/",
+      "expires": 1809249312,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "session",
+      "value": "4GxHet0UsWRWr2Nr9-NJCg|1778148913|W0mW4mufN9Mod-ILq78GmqEnnAwM-7UPG7xWuj3fj08qWZfSKLQMmAzu9zzuy4f7Q57Y6WYwXTqPmj7GLrrscyKTKHoDtsMu_CgDb9HRbqENPmu_V3MrKJKyxf9ZYnRGn4VmVoMXpVrmedkO9V-MuP-VdX3331quXGUVS9dRnvaUhcFF08Zr9U5ld8Yf7DeBpj9YIoI3CB_DxzBB4emxwUh0ilmzdG6cBnXFE2xAaofzpBi-XOiMQIcGdfsrXfedTAYlyCeqlKwMNJ_A09D9e4QxhRf3gNBPCZ9X_TZLMmDaakZECUZQketpoSzYtBDrxdKiPwKrh4GD0JCe4TtCBpisW9cGT2yAOrK4I9vBKxOwuMdBBQG1qCZYhl9cWqB7n-mtSvxjESeIkaNKqXlxA0tIVms0hTsgju9zWuWiuugkKDJQ_siBk0aIetAXXSvU9KX9NaIYjAtH4rpmV2JFMrdE9AxDIibvERv-5pbJnuDURo1mHJEUuaB4uK2tU4sjAWQQbLGynMeWCNwG5LVRTZf0uYtBiuwe2qZQnWxyodwe7UHPTbD95FgeAJr01v82xTKiRUHbq8s2JQ-9O9dathqsKWIKtlnM9OH1Ea7b01-izaMefnyFlaD4ZRHr1preRb7zFMYDh7HwpI4G0Am03togfpG8hUD6zkWXqtNeaOmszgG5HHXHvAM-fcukN0WnMCiuINFSkRxHFI3tBZrImPSWihYjHPmCCHZhjZUaL6ll_sMxp4oY2PB6Xk_Iu7x2ExIsHU49AayCiwkGuIZXPDxlbqtICdjqRbS9PThsHdN3OgN-7sqqoQUhtsCw7mUM2TshIUtI1nlgqs0TbIIdD509oCOCeSMyaA_xU2zhI9fciXGaVfH27Fc2CuOduQC8DhPMhPinCV6S6qtfaNne4Sr6GpdaohMDm9x2GECqXT_hs9oh0bydqS6NDlK1gFJlxtZEDU9na7qaMiym-GYMajOUqVH0PVXKPAjjpECj0VUkQCri8HsrrM27rEFW6U2Xre-zxiUcckyLPe-EHO4buzZjzsOAFJsuNR375CxvBoNODBsbT2DwsMsnu7UuApYgHK20eA6ntCofBeGzYzmhvzzCZZq9udG12TEul_81WYuNh9Pw9pzTOERDscklLSFyJxAXtICsGhoUpPu_E_i3R-Vdf0LWYdAg2vZqMrKokb2smXNxRdOZA8m2UoqC1V850vpi_bTFdYA57OA_3_TaHeEit3ToFYIOFdIDQfsTzgDnXcFqi0dWCR7o9lnGH6uhPkoIFcPAONSaL0kFA7W3j9fDMTYoI8-bJZkjz89dtb1ODt1D-tiD09pIqPjvXhOgSSwV7E_MOzYda3gDRLKPmDb0mpo5ztYT4zuCZixhzMxbGJ_MlDMgV-DDrHegbk3LVjbvGH-Scjv78nS6OosJNN586YRJwWpT6ULaaF-IxQtviAzYX23awdTpaCA0oTfT2pEQJ9yymF_Lyvn3K084yOeua0zcLgYHnkYOwyV4X1eiE675muBpemfThxdsGYQeAXPuO7xCmwFy7e706G5YfXGOhh1SVOiS4dXwnldxclvNN5h2UpHm3Pw7OtD77YcKsVJaHnweg1MHtuqV7otN33_qbHovNRo9kj3pduJtKq4X5x4FyUN3R7-LmcQxjXIxlYkumrBmoDpwGm1FLF8QgAT3rwJf7QJlA6205pRuGb6KxbJ2UXKnzGYQhtZ088mavoxqpxiEm7B63wwr2IwSdkrw_KHE-do8lp9ScA7pZeGEyB85uQF2OkTdBzHOIOZ_NdwUA6APWL3P61UNr1VjczQGPzqveBOqbo0kmLbddAW-3NIA4xw-JbwCTMuGk6vjUAcKKSgaI9JHe2lg3hVijfthisF1EBOLSfn3rj-etGr_dbqUjowgMNm_ccOBRVXWdjSAvaVC5rRsOgBElQ7POUVeb7uxhcpb6cwBiywbpK03t3wSSWBryAtTZ720yXSEZ20_VOLBxQFKdFA7St1gEznMquwfQt5KGubgAgYC3u4vtS4BtLtrX-FrxBVsIzW1vKOVXzIvXrcTYzu1aUVgemTQWVkho5AykCUz3nPRLCXyNoHUQTq4lEJADjrGnW0JtWnZRnlGPkHUl8UFv60yuS9sRJ-buRG1yM1M-F5G1WOpQVUXElQafYZsROwFY98dtfdQTHd-q50HgPBZsP38RODbudTbhK58IcRnIHjiNGVJFgHZSIWCSaAZExXlbJ-dKmB4fhnTPCzF1T4lLbCobGJduQoipotRvCyD_H2Iq-nXBp7Ux-TtdqeqIL2l2UWra3hO8beUsBxpf4hPFbEu9QfH56ObVtUgJMy-frFSOy3XynKz78XvpxN67tH4_SBn4evwgrKcDWRV6GvhaD8ejYQMyubg7PcuGIVNcm5ixx2l8-RLb9R23i2gEurC-qdmDbp6Spo4nI0DsQJTlTgZops2SGTZunQdTvRHFUlJeLV-kG2_9W6iIFXq8bbICSmbNaW4Ybakpfp5uzqHLnJwSxTDO4lROnt4dOmBaKNMO1hpk4GbpZVR-T9aqfJe1IDWUv1zjnlSoKyFjIG_9mM1r0cjAy-tDHT7-Q8JW7sLSUhrhC7O7vkZFRnAdyyr9k-LW6k3ZBlGWqMLQZhdqJWNqHSp3mwagL7HrmMZUDM1lVEfhw1mhzGJDwP1qMZns0CmarQYOOgbFkkrsoGRwIiYganGWd1u7f2JhwQXy69qraHiD1O7zbSyUb88PQQSu2InsOlO2AijZ9V3sR6_e7EZLi6qf6lc8Z9jPwsvNs9xDG5jJWAFrJRvEbwmYeGvIs9cf3mlh41MJbtmONTrQN96J6Ib1KXSweUh2O-oOPDaLXZeyB7mF967MEMyROZqAH2HikTj2CrDHHSMwx4Ie6udEDxd31WF0FKvK5kbOATT1PRmb1Kxr2vH7LqlU62YMGSjuaWFc7QraxdkOJ2SDgQD_ZUkNcJ1ktNmexCk-I5DIftcup-3V3nItGXTO6JoVsW-oOwhLNgQ5ptY1SXqW4LbnVcbKwvqL8zYdDUe0Rm1jMiis8HVEwwuVewQs5yyrNG9mp8shvqYm-9dk9GI1i0WJSl1w_W5sW-4JViElCb4piFnp78nMRp48XjJc0FNrULd2IEWaI1gjXqOoSR409q2Bivh1g7DbWWkw2ogI4hWD7ui-JLJcAKW0AXnrXEpUTGJbVtwsjQlSk3GnobpzXvXRALs6SyIdAJIquwpLwIYAOCSUMg3mBPzSghNUCV6o3xd-ZxYIwNdw3n0wRxc_texMEqecBYtPaL3mMVEpmeZF2UE2URniv7E4Fae-IP3VflKGX2mk-1TyXl0S-LOsHDt8qcrcKsLoFDvUJkTZ_4c2mY3gDl_qNBPvJEI4kikU7_ugDgPcie7cW53zmjYAmwqkeGj4XrMNeQSOOoM3rfiFbZC-Rn7JDdyls3gzBWh1K2Wbif-E7ucdwNW7AvGk2hrXD9t9gnpAqYy1UFFy_Q1dzz1uZAyZS2ubQlHo02lTTrOn3WvSANbCsbaqe2Sg6JI8s4fLf1nvf5lmh8CAPTm-UPcmF5pGFIwh4HxfmV5saoU-kJH-4RVvhFXvNsMt423ezW0kTErF_4K939ZxllTU02mlYeBy86qEqxveuEY8iXmud58sbNEaRiXtuUY1rjx_rNAhiEuV8Q2pnuWkEVoeQ4E_L0zV5CdGge2Q21rKyBoud1m_H0TJF-MiY-JHXT26e6YV86EYKn6e2YhcZo7P4ELI_M3i-pSLgcWsEKvsCvaCBKMydTGlO_u9IFYN4fq5qc848HlgzO0QxtT5Q1WfvZXgKXuYy7SOiHBUwO9yofz4ouyz6-PjdFYqppbscDsq6I3SFwY-Cqjwx3X15LIYxAZ2_nQDRz0PrQOIaxNk8yiAkiuXBQ15URua-enf6N9l3cqd1Z7Gic8K6CCUXrcg5KS5kb6LAd6B8pUbB0qq_0",
+      "domain": "www.codebuddy.ai",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "session_2",
+      "value": "vsugMlmliHgFtn7nmtQTeREluO4etXE9E5yAbey23qIx-F3uya-JroDxD3XyGaJlTICCi7EQKwNu7Fm4Tsu9Xu1Q3MTPzcJrshWz_7TZV9jUDsJWFksPMq8dIz2kZfJijSGVNmHOCqTsb8qpz2fduErKZg5h2UtiDNbgk5llE-y4FlcyLYkDt4tOPe5SohuHmlotRDvm0WLk9zR8dpiH9OFrT7LAJPmuaT1nLph5ZecJx1w3D0MSpFeVm3TjO3JfdC_9M0NLupwwo-UDO_Hlnn_uFtL1CYJH3W4lImF1YXF10KjJ6Yk_qTd3FS5CTBqVnbwV3BOZ3blqokL9FWxEjZVprw2p1Ktir7to-9VLqtjYqV6UPRtNP7yS1xX6UbhD6GcxhxFmGAAw4bFaaAJDR8wl2ENb0MohRgSMp29h4S9TTyD4W1ygCVJgI6EI98pVhyNomX6UQrjKgwUzIfrmqCl0yvD3XhqgY94fDesKMQ2lZQheAJIAH37DMPx5AZ0Ns7gBQTOYiUN5UWRbjSruXmR9NUA9TZFnO6G60x1Hh3qK8vjskCz3u6xe1gvpcaVAtaAWAx2uAY6wN_4Wl9sD947IxAbVoKlHz553zva-ClcC7IUCZCTIGlSku7ohQnMLN9mYd5_5Novbuk3MEZjC3F3By2yhagjF9bbQgRN62kUu5sxIfV3PwldYg-gWOL6Nf0FQVAiUCmF_q0uHHDjGunzRJ0Px_B8J9RRNdQ85J4QIWzWM4ZMnjQOFiRnWJ0lIFf3ger_0v7vJtcblNKCs37gRwfIdKkHOa1o5R-8OcuxYJSGPk9RpfcvXelalFYc6pShDCyK-4bJRCsdCGbfapN2g-XyI_O7Dr68zbfRcjnVgnfLdO0BNuB7r20Ossl3_vODwZ5_fHdn5V18Lml9jldqQecK1bIAfvBDnP7KHROXJ7RVaVF-T_C77Vkiaq10UAm_Ddu8DUdbnv1zar_fAOpyXMYkWQyvsZSefxOBcvH8Wi5TkPikdB76MMK98Ya-PEfLRnicubeXxzqx8XvEYmklDgDxNQzsP9JT5E9Uv5IOkjnAcEU4s67F22lZxAMb8qdCtHrMNWmMITnSYsDEqaBBK7Zfc3olUpKq2_IimMm6CkaDngmv-BSdkYfq9phbUPnx7aROF34QD1wCM-RChlxjPp3wcHYZhRV8U6R-v_e9JJACgKMqa-e08ikI-snbUutVf1Sd5qIFCIfsOOrgrhc8wK6iJ0P8xPDElBzHcVFz86TMzRwIu3PYrfNAqF-xV_W23etPu88sA_zjOKpgpORkqOkr1VBzAM4apQAy44KzEfNgTw4D_zoRqXuhpQiyhF0t7l1g1Wom5S-79Ohf055Nf2JV-cBU-M1CcWFOnmbL_9_MkYFDpjfwoOF_7zgfFTvJi_apvMgRQg8NiaerK-OwG9-cdCuCDmxd0IrNCVX0B-kPRoJPuP3gx7dvQiyRxjo_SahSUfAW9yPyCKpB7cWjkQuiwUfoOirYrKUpZPj9fYEpq19eF9hl3f2ajXA3oIQ|9k7kCCDla83ShFXp0IIga-umWUs",
+      "domain": "www.codebuddy.ai",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ]
+}

@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hanni/aiproxy/proxy/internal/config"
-	"github.com/hanni/aiproxy/proxy/internal/store"
+	"github.com/novellaxai/novellaxai/proxy/internal/config"
+	"github.com/novellaxai/novellaxai/proxy/internal/store"
 )
 
 type Refresher struct {

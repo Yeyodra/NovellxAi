@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hanni/aiproxy/proxy/internal/store"
+	"github.com/novellaxai/novellaxai/proxy/internal/store"
 )
 
 // --- Sessions Handler (GET + POST /api/sessions, DELETE /api/sessions/{id}) ---
@@ -186,7 +186,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write temp file with email:password
-	tmpFile, err := os.CreateTemp("", "aiproxy-login-*.txt")
+	tmpFile, err := os.CreateTemp("", "novellaxai-login-*.txt")
 	if err != nil {
 		loginMu.Unlock()
 		http.Error(w, `{"error":"failed to create temp file"}`, http.StatusInternalServerError)
@@ -207,10 +207,19 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		scriptPath = filepath.Join(".", "..", "auth-engine", "src", "batch_login.py")
 	}
 
+	// Use venv Python (has all dependencies: browserforge, camoufox, etc.)
+	venvPython := filepath.Join(exeDir, "..", "auth-engine", ".venv", "Scripts", "python.exe")
+	if _, err := os.Stat(venvPython); os.IsNotExist(err) {
+		venvPython = filepath.Join(".", "..", "auth-engine", ".venv", "Scripts", "python.exe")
+	}
+	if _, err := os.Stat(venvPython); os.IsNotExist(err) {
+		venvPython = "python" // fallback to system python
+	}
+
 	loginTotal = len(pending)
 	loginRunning = true
 	loginLogs = nil // reset logs
-	loginCmd = exec.Command("python", "-u", scriptPath, tmpFile.Name(), "--headless")
+	loginCmd = exec.Command(venvPython, "-u", scriptPath, tmpFile.Name(), "--headless")
 	loginMu.Unlock()
 
 	// Run in background with line-by-line capture
