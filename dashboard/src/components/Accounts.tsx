@@ -134,7 +134,10 @@ export default function Accounts({ onNavigate }: AccountsProps) {
       {/* Provider Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {/* CodeBuddy Provider Card */}
-        <div className="bg-[#1a1d23] border border-[#2a2d35] rounded-xl p-5 space-y-4">
+        <div
+          onClick={() => onNavigate('provider:codebuddy')}
+          className="bg-[#1a1d23] border border-[#2a2d35] rounded-xl p-5 space-y-4 cursor-pointer transition-all duration-200 hover:border-[#16b195]/40 hover:shadow-[0_0_12px_rgba(22,177,149,0.08)]"
+        >
           {/* Card Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -147,7 +150,7 @@ export default function Accounts({ onNavigate }: AccountsProps) {
               </div>
             </div>
             <button
-              onClick={() => setShowAddModal(true)}
+              onClick={(e) => { e.stopPropagation(); setShowAddModal(true) }}
               className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-black hover:from-teal-400 hover:to-cyan-400 transition-all shadow-lg shadow-teal-500/20"
             >
               Add

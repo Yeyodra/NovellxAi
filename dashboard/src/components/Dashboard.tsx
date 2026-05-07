@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import type { Page } from '../App'
 
 // Types matching the API response
 interface DashboardData {
@@ -104,7 +103,7 @@ interface ProviderData {
   creditsTotal: number
 }
 
-function ProviderCard({ provider, onClick }: { provider: ProviderData; onClick: () => void }) {
+function ProviderCard({ provider }: { provider: ProviderData }) {
   const pct = provider.creditsTotal > 0 ? (provider.creditsUsed / provider.creditsTotal) * 100 : 0
   const prevCredits = useRef(provider.creditsUsed)
   const [animate, setAnimate] = useState(false)
@@ -119,11 +118,7 @@ function ProviderCard({ provider, onClick }: { provider: ProviderData; onClick: 
   }, [provider.creditsUsed])
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4 cursor-pointer transition-all duration-200 hover:border-[#16b195]/40 hover:shadow-[0_0_12px_rgba(22,177,149,0.08)] text-left w-full"
-    >
+    <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="text-sm font-semibold text-white">{provider.name}</h3>
@@ -157,11 +152,11 @@ function ProviderCard({ provider, onClick }: { provider: ProviderData; onClick: 
       ) : (
         <p className="text-xs text-gray-500 italic">No accounts</p>
       )}
-    </button>
+    </div>
   )
 }
 
-export default function Dashboard({ onNavigate }: { onNavigate: (page: Page) => void }) {
+export default function Dashboard() {
   const [timeRange, setTimeRange] = useState('7d')
   const [data, setData] = useState<DashboardData>(fallbackData)
   const ranges = ['1d', '7d', '30d', 'all']
@@ -219,11 +214,7 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: Page) => 
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Providers</h2>
         <div className="grid grid-cols-2 gap-3">
           {providersList.map((p) => (
-            <ProviderCard
-              key={p.name}
-              provider={p}
-              onClick={() => onNavigate(`provider:${p.name.toLowerCase()}`)}
-            />
+            <ProviderCard key={p.name} provider={p} />
           ))}
         </div>
       </div>
