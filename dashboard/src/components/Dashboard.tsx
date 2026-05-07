@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import ProviderDetail from './ProviderDetail'
+import type { Page } from '../App'
 
 // Types matching the API response
 interface DashboardData {
@@ -104,7 +104,7 @@ interface ProviderData {
   creditsTotal: number
 }
 
-function ProviderCard({ provider, onClick, isSelected }: { provider: ProviderData; onClick?: () => void; isSelected?: boolean }) {
+function ProviderCard({ provider, onClick }: { provider: ProviderData; onClick: () => void }) {
   const pct = provider.creditsTotal > 0 ? (provider.creditsUsed / provider.creditsTotal) * 100 : 0
   const prevCredits = useRef(provider.creditsUsed)
   const [animate, setAnimate] = useState(false)
@@ -122,9 +122,7 @@ function ProviderCard({ provider, onClick, isSelected }: { provider: ProviderDat
     <button
       type="button"
       onClick={onClick}
-      className={`bg-[#1a1a1a] border rounded-lg p-4 cursor-pointer transition-all duration-200 hover:border-[#16b195]/40 hover:shadow-[0_0_12px_rgba(22,177,149,0.08)] text-left w-full ${
-        isSelected ? 'border-[#16b195]/50 shadow-[0_0_16px_rgba(22,177,149,0.12)]' : 'border-white/[0.08]'
-      }`}
+      className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4 cursor-pointer transition-all duration-200 hover:border-[#16b195]/40 hover:shadow-[0_0_12px_rgba(22,177,149,0.08)] text-left w-full"
     >
       <div className="flex items-center justify-between mb-3">
         <div>
@@ -163,10 +161,9 @@ function ProviderCard({ provider, onClick, isSelected }: { provider: ProviderDat
   )
 }
 
-export default function Dashboard() {
+export default function Dashboard({ onNavigate }: { onNavigate: (page: Page) => void }) {
   const [timeRange, setTimeRange] = useState('7d')
   const [data, setData] = useState<DashboardData>(fallbackData)
-  const [expandedProvider, setExpandedProvider] = useState<string | null>(null)
   const ranges = ['1d', '7d', '30d', 'all']
 
   useEffect(() => {
@@ -225,24 +222,9 @@ export default function Dashboard() {
             <ProviderCard
               key={p.name}
               provider={p}
-              isSelected={expandedProvider === p.name}
-              onClick={() => setExpandedProvider(expandedProvider === p.name ? null : p.name)}
+              onClick={() => onNavigate(`provider:${p.name.toLowerCase()}`)}
             />
           ))}
-        </div>
-
-        {/* Expandable Provider Detail Panel */}
-        <div
-          className={`transition-all duration-300 ease-in-out overflow-hidden ${
-            expandedProvider ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'
-          }`}
-        >
-          {expandedProvider && (
-            <ProviderDetail
-              providerName={expandedProvider}
-              onClose={() => setExpandedProvider(null)}
-            />
-          )}
         </div>
       </div>
 

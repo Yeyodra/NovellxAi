@@ -73,12 +73,15 @@ export default function ProviderDetail({ providerName, onClose }: ProviderDetail
   ]
 
   return (
-    <div className="bg-[#0d0d0d] border border-white/[0.08] rounded-lg overflow-hidden">
+    <div className="w-full space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.08]">
-        <div className="flex items-center gap-3">
-          <h3 className="text-sm font-semibold text-white">{providerName}</h3>
-          <span className="text-[11px] text-gray-500">{sessions.length} accounts</span>
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-semibold text-white tracking-tight capitalize">{providerName}</h1>
+            <span className="text-sm text-gray-500">{sessions.length} accounts</span>
+          </div>
+          <p className="text-sm text-gray-500 mt-0.5">Account details and usage</p>
         </div>
         <button
           type="button"
@@ -89,12 +92,12 @@ export default function ProviderDetail({ providerName, onClose }: ProviderDetail
             <title>Back arrow</title>
             <path d="M7.5 9L4.5 6L7.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          Back
+          Back to Dashboard
         </button>
       </div>
 
       {/* Status Summary Grid */}
-      <div className="grid grid-cols-4 gap-3 px-5 py-4">
+      <div className="grid grid-cols-4 gap-3">
         {summaryCards.map((card) => (
           <div
             key={card.label}
@@ -108,18 +111,17 @@ export default function ProviderDetail({ providerName, onClose }: ProviderDetail
       </div>
 
       {/* Account List */}
-      <div className="px-5 pb-4">
-        <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg overflow-hidden">
-          {/* Table Header */}
-          <div className="grid grid-cols-[1fr_100px_120px_100px] gap-2 px-4 py-2.5 border-b border-white/[0.06] text-[10px] font-medium text-gray-500 uppercase tracking-wide">
-            <span>Email</span>
-            <span>Status</span>
-            <span>Credits</span>
-            <span>Added</span>
-          </div>
+      <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg overflow-hidden">
+        {/* Table Header */}
+        <div className="grid grid-cols-[1fr_100px_120px_100px] gap-2 px-4 py-2.5 border-b border-white/[0.06] text-[10px] font-medium text-gray-500 uppercase tracking-wide">
+          <span>Email</span>
+          <span>Status</span>
+          <span>Credits</span>
+          <span>Added</span>
+        </div>
 
-          {/* Rows */}
-          <div className="max-h-[280px] overflow-y-auto scrollbar-thin">
+        {/* Rows */}
+        <div className="overflow-y-auto">
             {loading ? (
               <div className="flex items-center justify-center py-8">
                 <div className="w-4 h-4 border-2 border-[#16b195]/30 border-t-[#16b195] rounded-full animate-spin" />
@@ -146,7 +148,6 @@ export default function ProviderDetail({ providerName, onClose }: ProviderDetail
                 </div>
               ))
             )}
-          </div>
         </div>
       </div>
     </div>
